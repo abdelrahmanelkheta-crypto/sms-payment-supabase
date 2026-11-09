@@ -1,4 +1,4 @@
-name: Build Android APK & Deploy Dashboard
+name: Build Android APK
 
 on:
   push:
@@ -25,9 +25,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Setup Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -47,3 +44,13 @@ jobs:
           name: SMS-Payment-Monitor-APK
           path: SMS-Payment-Monitor.apk
           retention-days: 90
+
+      - name: Publish APK to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "تطبيق راصد مدفوعات SMS (APK)"
+          body: "حمّل ملف SMS-Payment-Monitor.apk وثبته مباشرة على التليفون."
+          files: SMS-Payment-Monitor.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
