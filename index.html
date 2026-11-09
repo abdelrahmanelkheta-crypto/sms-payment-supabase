@@ -500,4 +500,133 @@
       let pathD = `M ${coords[0].x} ${coords[0].y}`;
       for (let i = 1; i < coords.length; i++) {
         const prev = coords[i - 1], curr = coords[i], midX = (prev.x + curr.x) / 2;
-        pathD += ` C ${midX} ${
+        pathD += ` C ${midX} ${prev.y}, ${midX} ${curr.y}, ${curr.x} ${curr.y}`;
+      }
+      const areaD = `${pathD} L ${coords[coords.length - 1].x} 180 L ${coords[0].x} 180 Z`;
+
+      svg.innerHTML = `
+        <defs><linearGradient id="pastelFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6366F1" stop-opacity="0.20" /><stop offset="100%" stop-color="#6366F1" stop-opacity="0.0" /></linearGradient></defs>
+        ${[35, 80, 125, 170].map((y) => `<line x1="20" y1="${y}" x2="680" y2="${y}" stroke="#F1F5F9" stroke-width="1.5" stroke-dasharray="4 4" />`).join('')}
+        <path d="${areaD}" fill="url(#pastelFill)" />
+        <path d="${pathD}" fill="none" stroke="#6366F1" stroke-width="3" stroke-linecap="round" />
+        ${coords.map((c) => `<g><circle cx="${c.x}" cy="${c.y}" r="5.5" fill="#FFFFFF" stroke="#6366F1" stroke-width="3" /><text x="${c.x}" y="${c.y - 12}" text-anchor="middle" fill="#4F46E5" font-size="11" font-weight="700">${c.val} ج.م</text></g>`).join('')}
+      `;
+      labelsDiv.innerHTML = coords.map((c) => `<span>عملية ${c.label}</span>`).join('');
+    }
+
+    function setFilter(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-pill').forEach((btn) => {
+        const active = btn.dataset.tab === f;
+        btn.className = active
+          ? 'filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60 transition-all'
+          : 'filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all';
+      });
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('paymentsTableBody');
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const filtered = allPayments.filter((p) => {
+        if (currentFilter !== 'all' && p.status !== currentFilter) return false;
+        if (!q) return true;
+        return (
+          (p.sender_phone && p.sender_phone.toLowerCase().includes(q)) ||
+          (p._sender_name && p._sender_name.toLowerCase().includes(q)) ||
+          (p._wallet_phone && p._wallet_phone.toLowerCase().includes(q)) ||
+          (p.transaction_id && p.transaction_id.toLowerCase().includes(q)) ||
+          (p.device_id && p.device_id.toLowerCase().includes(q)) ||
+          (p.raw_message && p.raw_message.toLowerCase().includes(q)) ||
+          String(p.amount || '').includes(q)
+        );
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" class="py-14 text-center text-gray-400 text-sm">لا توجد تحويلات مطابقة للفلتر الحالي</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((p) => {
+        const isNew = p.id === lastAddedId;
+        const amountHtml = p.amount !== null ? `<span class="text-base font-extrabold text-emerald-700 font-mono">${Number(p.amount).toFixed(2)}</span> <span class="text-xs text-gray-400">ج.م</span>` : `<span class="text-xs font-semibold text-rose-500">غير تحويل</span>`;
+        const senderHtml = p.sender_phone ? `<div class="space-y-1"><button onclick="copyText('${p.sender_phone}', 'رقم المحول منه')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50/90 hover:bg-amber-100 text-amber-900 border border-amber-200/70 font-mono text-xs font-bold transition-colors"><span>📲 ${p.sender_phone}</span><span class="text-[10px] opacity-70">نسخ</span></button>${p._sender_name ? `<p class="text-xs font-semibold text-gray-600">👤 ${escapeHtml(p._sender_name)}</p>` : ''}</div>` : '<span class="text-gray-300">—</span>';
+        const walletHtml = p._wallet_phone ? `<button onclick="copyText('${p._wallet_phone}', 'رقم محفظتنا')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50/90 hover:bg-sky-100 text-sky-800 border border-sky-200/70 font-mono text-xs font-bold transition-colors"><span>🏦 ${p._wallet_phone}</span><span class="text-[10px] opacity-70">نسخ</span></button>` : '<span class="text-gray-300">—</span>';
+        const txHtml = p.transaction_id ? `<button onclick="copyText('${p.transaction_id}', 'رقم العملية')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-violet-50/90 hover:bg-violet-100 text-violet-800 border border-violet-200/70 font-mono text-xs font-bold transition-colors"><span>#${p.transaction_id}</span><span class="text-[10px] opacity-70">نسخ</span></button>` : '<span class="text-gray-300">—</span>';
+        const deviceHtml = p.device_id ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-semibold">${escapeHtml(p.device_id)}</span>` : '—';
+        const statusHtml = p.status === 'linked' ? `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/70">✓ مكتمل / مربوط</span>` : p.status === 'unlinked' ? `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/70">⏳ قيد الانتظار</span>` : `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200/70">⚠️ رسالة أخرى</span>`;
+        const dateStr = p.created_at ? new Date(p.created_at).toLocaleString('ar-EG') : '—';
+        const actionBtn = p.status === 'linked' ? `<button onclick="quickToggleStatus(${p.id}, 'unlinked')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">إلغاء الربط</button>` : `<button onclick="quickToggleStatus(${p.id}, 'linked')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs transition-colors">✓ تأكيد وربط</button>`;
+
+        return `<tr class="hover:bg-gray-50/70 transition-colors ${isNew ? 'new-row-flash' : ''}"><td class="py-4 px-5 font-mono text-xs font-bold text-gray-400">#${p.id}</td><td class="py-4 px-5 whitespace-nowrap">${amountHtml}</td><td class="py-4 px-5 whitespace-nowrap">${senderHtml}</td><td class="py-4 px-5 whitespace-nowrap">${walletHtml}</td><td class="py-4 px-5 whitespace-nowrap">${txHtml}</td><td class="py-4 px-5 whitespace-nowrap">${deviceHtml}</td><td class="py-4 px-5 max-w-xs text-xs text-gray-500 leading-relaxed break-words">${escapeHtml(p.raw_message || '')}</td><td class="py-4 px-5 whitespace-nowrap">${statusHtml}</td><td class="py-4 px-5 whitespace-nowrap text-xs text-gray-400">${dateStr}</td><td class="py-4 px-5 whitespace-nowrap"><div class="flex items-center gap-1.5">${p.status !== 'error' ? actionBtn : ''}<button onclick="deletePayment(${p.id})" class="p-1.5 rounded-xl text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">🗑</button></div></td></tr>`;
+      }).join('');
+    }
+
+    async function quickToggleStatus(id, status) {
+      await sbClient.from('incoming_payments').update({ status }).eq('id', id);
+      showToast('تم التحديث', `تم تغيير حالة العملية #${id}`);
+      loadPayments();
+    }
+
+    async function deletePayment(id) {
+      if (!confirm(`هل تريد حذف السجل #${id}؟`)) return;
+      await sbClient.from('incoming_payments').delete().eq('id', id);
+      showToast('تم الحذف', `تم حذف السجل #${id}`);
+      loadPayments();
+    }
+
+    function copyPrimaryWallet() { if (primaryWalletNumber) copyText(primaryWalletNumber, 'رقم محفظتنا'); }
+    function copyText(text, label) { navigator.clipboard.writeText(text); showToast('تم النسخ بنجاح 📋', `${label}: ${text}`); }
+
+    function openSimModal() {
+      const amt = [250, 400, 600, 750][Math.floor(Math.random() * 4)];
+      const phone = '010' + Math.floor(10000000 + Math.random() * 89999999);
+      const tx = '0256' + Math.floor(10000000 + Math.random() * 89999999);
+      document.getElementById('simMessage').value = `تم استلام مبلغ ${amt} جنيه من رقم ${phone} المسجل بإسم Ahmed M Hassan على رقم محفظتك  01061392304.\nرصيدك الحالي: 136610.63 جنيه\nتاريخ العملية: 22:50 26-11-09\nرقم العملية: ${tx}`;
+      document.getElementById('simModal').classList.remove('hidden');
+      document.getElementById('simModal').classList.add('flex');
+    }
+    function closeSimModal() { document.getElementById('simModal').classList.add('hidden'); document.getElementById('simModal').classList.remove('flex'); }
+
+    async function sendTestPayment() {
+      const p_device_id = document.getElementById('simDevice').value.trim() || 'Sales_Phone_1';
+      const p_raw_message = document.getElementById('simMessage').value.trim();
+      if (!p_raw_message) return;
+      const { error } = await sbClient.rpc('ingest_sms_payment', { p_raw_message, p_device_id });
+      if (error) showToast('خطأ الإرسال', error.message, true);
+      else { closeSimModal(); loadPayments(); }
+    }
+
+    function openConfigModal() {
+      const { url, key } = getCredentials();
+      document.getElementById('cfgUrl').value = url;
+      document.getElementById('cfgKey').value = key;
+      document.getElementById('configModal').classList.remove('hidden');
+      document.getElementById('configModal').classList.add('flex');
+    }
+    function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); document.getElementById('configModal').classList.remove('flex'); }
+    function saveSupabaseConfig() {
+      const url = document.getElementById('cfgUrl').value.trim();
+      const key = document.getElementById('cfgKey').value.trim();
+      if (!url || !key) return;
+      localStorage.setItem('SB_URL', url);
+      localStorage.setItem('SB_KEY', key);
+      closeConfigModal();
+      initSupabase();
+    }
+
+    function escapeHtml(str) { return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function showToast(title, desc, isError = false) {
+      const container = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `bg-white border ${isError ? 'border-rose-200' : 'border-emerald-200'} shadow-lg rounded-2xl px-4 py-3 min-w-[260px]`;
+      t.innerHTML = `<div class="text-xs font-extrabold ${isError ? 'text-rose-600' : 'text-emerald-700'}">${escapeHtml(title)}</div><div class="text-xs text-gray-500 mt-0.5">${escapeHtml(desc)}</div>`;
+      container.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+
+    lucide.createIcons();
+    initSupabase();
+  </script>
+</body>
+</html>
