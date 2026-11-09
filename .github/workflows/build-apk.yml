@@ -7,6 +7,9 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -21,11 +24,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build Debug APK
+      - name: Build Debug APK & Publish Direct Download Link
         working-directory: ./android-app
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gradle assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk ../SMS-Payment-Monitor.apk
+          cd ..
+          gh release delete v1.0.0 --yes --cleanup-tag || true
+          gh release create v1.0.0 SMS-Payment-Monitor.apk --title "تطبيق راصد مدفوعات SMS" --notes "رابط تحميل مباشر للهواتف بدون تسجيل دخول"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
