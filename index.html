@@ -7,34 +7,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
-  <!-- مكتبة Supabase الرسمية بإصدار مثبت يدعم Publishable Keys -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
   <style>
     :root {
       --bg-base: #090d16;
       --bg-surface: #111827;
-      --bg-card: rgba(17, 24, 39, 0.82);
-      --bg-card-hover: rgba(31, 41, 55, 0.88);
+      --bg-card: rgba(17, 24, 39, 0.84);
+      --bg-card-hover: rgba(31, 41, 55, 0.9);
       --border-subtle: rgba(255, 255, 255, 0.08);
       --text-primary: #f9fafb;
       --text-secondary: #9ca3af;
       --text-muted: #6b7280;
-      --accent-primary: #10b981;
-      --accent-indigo: #6366f1;
       --emerald: #10b981;
       --emerald-bg: rgba(16, 185, 129, 0.12);
       --amber: #f59e0b;
       --amber-bg: rgba(245, 158, 11, 0.12);
       --rose: #f43f5e;
       --rose-bg: rgba(244, 63, 94, 0.12);
+      --indigo: #6366f1;
+      --indigo-bg: rgba(99, 102, 241, 0.14);
+      --cyan: #06b6d4;
+      --cyan-bg: rgba(6, 182, 212, 0.14);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Cairo', sans-serif;
       background-color: var(--bg-base);
@@ -45,482 +40,120 @@
       min-height: 100vh;
       line-height: 1.6;
     }
-
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-      direction: ltr;
-      display: inline-block;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 28px 24px 60px;
-    }
-
+    .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; display: inline-block; }
+    .container { max-width: 1460px; margin: 0 auto; padding: 26px 22px 60px; }
     .header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 26px;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 16px; padding-bottom: 22px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 26px;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
+    .brand { display: flex; align-items: center; gap: 14px; }
     .brand-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 48px; height: 48px; border-radius: 14px;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
-      font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); font-size: 22px;
     }
-
-    .brand-title h1 {
-      font-size: 1.45rem;
-      font-weight: 800;
-    }
-
-    .brand-title p {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .brand-title h1 { font-size: 1.42rem; font-weight: 800; }
+    .brand-title p { font-size: 0.85rem; color: var(--text-secondary); }
+    .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .conn-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.28);
-      color: #34d399;
+      display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
+      border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.28); color: #34d399;
     }
-
-    .conn-badge.disconnected {
-      background: var(--rose-bg);
-      border-color: rgba(244, 63, 94, 0.3);
-      color: #fb7185;
-    }
-
-    .pulse-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #10b981;
-      animation: pulse 2s infinite;
-    }
-
-    .conn-badge.disconnected .pulse-dot {
-      background: var(--rose);
-      animation: none;
-    }
-
+    .conn-badge.disconnected { background: var(--rose-bg); border-color: rgba(244, 63, 94, 0.3); color: #fb7185; }
+    .pulse-dot { width: 9px; height: 9px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; }
+    .conn-badge.disconnected .pulse-dot { background: var(--rose); animation: none; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
       70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
       100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
-
     .btn {
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      padding: 9px 15px;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.2s ease;
+      font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
+      padding: 9px 15px; border-radius: 10px; border: 1px solid var(--border-subtle);
+      background: var(--bg-surface); color: var(--text-primary); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; transition: all 0.2s ease;
     }
-
-    .btn:hover {
-      background: var(--bg-card-hover);
-      border-color: rgba(255, 255, 255, 0.18);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      border-color: rgba(16, 185, 129, 0.5);
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-      margin-bottom: 26px;
-    }
-
+    .btn:hover { background: var(--bg-card-hover); border-color: rgba(255, 255, 255, 0.18); }
+    .btn-primary { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: rgba(16, 185, 129, 0.5); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 24px; }
     .kpi-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 20px 22px;
+      background: var(--bg-card); backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle); border-radius: 16px; padding: 20px 22px;
     }
-
-    .kpi-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .kpi-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .kpi-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    .kpi-value {
-      font-size: 1.75rem;
-      font-weight: 800;
-      margin-bottom: 5px;
-    }
-
-    .kpi-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
+    .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .kpi-title { font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); }
+    .kpi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .kpi-value { font-size: 1.72rem; font-weight: 800; margin-bottom: 5px; }
+    .kpi-sub { font-size: 0.78rem; color: var(--text-muted); }
     .controls-bar {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 16px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px;
+      padding: 16px 20px; display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 16px; margin-bottom: 20px;
     }
-
-    .filter-tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
     .tab-btn {
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.84rem;
-      font-weight: 700;
-      padding: 7px 14px;
-      border-radius: 9px;
-      border: 1px solid transparent;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      font-family: 'Cairo', sans-serif; font-size: 0.84rem; font-weight: 700;
+      padding: 7px 14px; border-radius: 9px; border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.04); color: var(--text-secondary); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
     }
-
-    .tab-btn.active {
-      background: rgba(16, 185, 129, 0.16);
-      border-color: rgba(16, 185, 129, 0.45);
-      color: #34d399;
-    }
-
-    .tab-count {
-      font-size: 0.74rem;
-      padding: 1px 7px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .search-box {
-      position: relative;
-      flex: 1;
-      min-width: 260px;
-      max-width: 400px;
-    }
-
+    .tab-btn.active { background: rgba(16, 185, 129, 0.16); border-color: rgba(16, 185, 129, 0.45); color: #34d399; }
+    .tab-count { font-size: 0.74rem; padding: 1px 7px; border-radius: 99px; background: rgba(255, 255, 255, 0.08); }
+    .search-box { position: relative; flex: 1; min-width: 280px; max-width: 440px; }
     .search-box input {
-      width: 100%;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.88rem;
-      padding: 9px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(9, 13, 22, 0.75);
-      color: var(--text-primary);
-      outline: none;
+      width: 100%; font-family: 'Cairo', sans-serif; font-size: 0.88rem;
+      padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border-subtle);
+      background: rgba(9, 13, 22, 0.75); color: var(--text-primary); outline: none;
     }
-
-    .table-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .table-responsive {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: right;
-    }
-
-    thead {
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    th {
-      padding: 14px 16px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 15px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      font-size: 0.88rem;
-      vertical-align: middle;
-    }
-
-    tbody tr.new-row-flash {
-      animation: flashRow 2.6s ease-out;
-    }
-
-    @keyframes flashRow {
-      0% { background: rgba(16, 185, 129, 0.32); }
-      100% { background: transparent; }
-    }
-
+    .table-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; }
+    .table-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: right; }
+    thead { background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border-subtle); }
+    th { padding: 14px 14px; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
+    td { padding: 14px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 0.87rem; vertical-align: middle; }
+    tbody tr.new-row-flash { animation: flashRow 2.6s ease-out; }
+    @keyframes flashRow { 0% { background: rgba(16, 185, 129, 0.32); } 100% { background: transparent; } }
     .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px;
+      border-radius: 999px; font-size: 0.78rem; font-weight: 700; white-space: nowrap;
     }
-
-    .status-unlinked {
-      background: var(--amber-bg);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .status-linked {
-      background: var(--emerald-bg);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .status-error {
-      background: var(--rose-bg);
-      color: #fb7185;
-      border: 1px solid rgba(244, 63, 94, 0.3);
-    }
-
-    .amount-badge {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #34d399;
-    }
-
+    .status-unlinked { background: var(--amber-bg); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-linked { background: var(--emerald-bg); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-error { background: var(--rose-bg); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .amount-badge { font-size: 1.05rem; font-weight: 800; color: #34d399; }
     .copy-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 9px;
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      cursor: pointer;
-      font-size: 0.83rem;
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      border-radius: 8px; background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;
+      font-size: 0.84rem; font-weight: 600; transition: all 0.15s ease; white-space: nowrap;
     }
-
-    .raw-msg {
-      max-width: 340px;
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      word-break: break-word;
-    }
-
+    .copy-chip:hover { background: rgba(16, 185, 129, 0.18); border-color: rgba(16, 185, 129, 0.45); transform: translateY(-1px); }
+    .wallet-chip { background: var(--cyan-bg); border-color: rgba(6, 182, 212, 0.35); color: #67e8f9; }
+    .sender-chip { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.32); color: #fde68a; }
+    .tx-chip { background: var(--indigo-bg); border-color: rgba(99, 102, 241, 0.35); color: #c7d2fe; }
+    .sender-name-sub { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-top: 3px; }
+    .raw-msg { max-width: 310px; font-size: 0.8rem; color: var(--text-secondary); word-break: break-word; line-height: 1.45; }
     .device-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
-      color: #a5b4fc;
-      background: rgba(99, 102, 241, 0.14);
-      padding: 3px 9px;
-      border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem;
+      color: #a5b4fc; background: rgba(99, 102, 241, 0.14); padding: 3px 9px; border-radius: 6px; white-space: nowrap;
     }
-
-    .row-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-
+    .row-actions { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
     .action-btn {
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.76rem;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 7px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-      cursor: pointer;
+      font-family: 'Cairo', sans-serif; font-size: 0.76rem; font-weight: 700;
+      padding: 5px 10px; border-radius: 7px; border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.05); color: var(--text-primary); cursor: pointer;
     }
-
-    .action-btn.link-btn {
-      background: rgba(16, 185, 129, 0.14);
-      border-color: rgba(16, 185, 129, 0.35);
-      color: #34d399;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 64px 20px;
-      color: var(--text-secondary);
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 7, 18, 0.78);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 18px;
-      width: 100%;
-      max-width: 540px;
-      padding: 24px;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.9rem;
-      padding: 9px 12px;
-      border-radius: 9px;
-      border: 1px solid var(--border-subtle);
-      background: #090d16;
-      color: var(--text-primary);
-      outline: none;
-    }
-
-    .form-group textarea {
-      min-height: 80px;
-    }
-
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      z-index: 2000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
+    .action-btn.link-btn { background: rgba(16, 185, 129, 0.14); border-color: rgba(16, 185, 129, 0.35); color: #34d399; }
+    .empty-state { text-align: center; padding: 64px 20px; color: var(--text-secondary); }
+    .toast-container { position: fixed; bottom: 24px; left: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
     .toast {
-      background: rgba(17, 24, 39, 0.96);
-      border-right: 4px solid var(--emerald);
-      border-top: 1px solid var(--border-subtle);
-      border-left: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 13px 18px;
-      border-radius: 12px;
-      min-width: 280px;
+      background: rgba(17, 24, 39, 0.96); border-right: 4px solid var(--emerald);
+      border-top: 1px solid var(--border-subtle); border-left: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle); padding: 13px 18px; border-radius: 12px; min-width: 280px;
     }
-
-    .toast.error-toast {
-      border-right-color: var(--rose);
-    }
+    .toast.error-toast { border-right-color: var(--rose); }
   </style>
 </head>
 <body>
@@ -530,22 +163,18 @@
         <div class="brand-icon">⚡</div>
         <div class="brand-title">
           <h1>راصد المدفوعات السحابي (Supabase Realtime)</h1>
-          <p>متابعة لحظية لتحويلات فودافون كاش القادمة من تطبيق الأندرويد</p>
+          <p>استخراج فوري لـ (المبلغ • رقم المحول منه واسمه • رقم محفظتنا • رقم العملية) بضغطة نسخ واحدة</p>
         </div>
       </div>
-
       <div class="header-actions">
         <div id="connBadge" class="conn-badge disconnected">
           <span class="pulse-dot"></span>
-          <span id="connText">في انتظار إعداد Supabase</span>
+          <span id="connText">جاري الاتصال...</span>
         </div>
-        <button class="btn" onclick="openConfigModal()">⚙️ إعدادات Supabase</button>
         <button class="btn" onclick="loadPayments()">🔄 تحديث</button>
-        <button class="btn btn-primary" onclick="openSimModal()">⚡ تجربة إرسال رسالة</button>
       </div>
     </header>
 
-    <!-- KPI Cards -->
     <section class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-header">
@@ -555,7 +184,6 @@
         <div class="kpi-value" id="kpiTotalAmount">0.00 ج.م</div>
         <div class="kpi-sub" id="kpiTotalCount">إجمالي 0 عملية صحيحة</div>
       </div>
-
       <div class="kpi-card">
         <div class="kpi-header">
           <span class="kpi-title">غير مربوطة (Unlinked)</span>
@@ -564,7 +192,6 @@
         <div class="kpi-value" id="kpiUnlinkedCount" style="color: #fbbf24;">0</div>
         <div class="kpi-sub" id="kpiUnlinkedAmount">بقيمة 0.00 ج.م</div>
       </div>
-
       <div class="kpi-card">
         <div class="kpi-header">
           <span class="kpi-title">تم ربطها (Linked)</span>
@@ -573,18 +200,16 @@
         <div class="kpi-value" id="kpiLinkedCount" style="color: #34d399;">0</div>
         <div class="kpi-sub" id="kpiLinkedAmount">بقيمة 0.00 ج.م</div>
       </div>
-
       <div class="kpi-card">
         <div class="kpi-header">
-          <span class="kpi-title">مراجعة يدوية (Error)</span>
+          <span class="kpi-title">رسائل أخرى / مراجعة</span>
           <div class="kpi-icon" style="background: var(--rose-bg); color: var(--rose);">⚠️</div>
         </div>
         <div class="kpi-value" id="kpiErrorCount" style="color: #fb7185;">0</div>
-        <div class="kpi-sub">رسائل لم تطابق الـ Regex</div>
+        <div class="kpi-sub">استعلام رصيد أو رسائل غير تحويل</div>
       </div>
     </section>
 
-    <!-- Controls Bar -->
     <section class="controls-bar">
       <div class="filter-tabs">
         <button class="tab-btn active" data-filter="all" onclick="setFilter('all')">
@@ -597,21 +222,14 @@
           ✅ تم الربط <span class="tab-count" id="tabCountLinked">0</span>
         </button>
         <button class="tab-btn" data-filter="error" onclick="setFilter('error')">
-          ⚠️ مراجعة يدوية <span class="tab-count" id="tabCountError">0</span>
+          ⚠️ رسائل أخرى <span class="tab-count" id="tabCountError">0</span>
         </button>
       </div>
-
       <div class="search-box">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="ابحث برقم الهاتف، رقم العملية، الجهاز، أو نص الرسالة..."
-          oninput="renderTable()"
-        />
+        <input type="text" id="searchInput" placeholder="ابحث برقم المحول، رقم المحفظة، رقم العملية، الاسم، أو المبلغ..." oninput="renderTable()" />
       </div>
     </section>
 
-    <!-- Table -->
     <section class="table-card">
       <div class="table-responsive">
         <table>
@@ -619,12 +237,13 @@
             <tr>
               <th>#</th>
               <th>المبلغ</th>
-              <th>رقم المحول</th>
+              <th>رقم المحول منه (والاسم)</th>
+              <th>رقم محفظتنا (المستلمة)</th>
               <th>رقم العملية</th>
-              <th>الجهاز المستلم</th>
+              <th>الجهاز</th>
               <th>نص الرسالة الخام</th>
               <th>الحالة</th>
-              <th>وقت التسجيل</th>
+              <th>وقت الوصول</th>
               <th>إجراءات</th>
             </tr>
           </thead>
@@ -634,480 +253,213 @@
     </section>
   </div>
 
-  <!-- Modal: إعدادات الاتصال بـ Supabase -->
-  <div id="configModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>⚙️ إعدادات الاتصال بـ Supabase</h3>
-        <button class="btn" onclick="closeConfigModal()">✕</button>
-      </div>
-      <div class="form-group">
-        <label>رابط مشروع Supabase (Project URL)</label>
-        <input type="text" id="cfgUrl" class="mono" placeholder="https://xxxxxxxxxxxx.supabase.co" />
-      </div>
-      <div class="form-group">
-        <label>مفتاح الواجهة (Anon / Publishable Key)</label>
-        <input type="password" id="cfgKey" class="mono" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI..." />
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeConfigModal()">إلغاء</button>
-        <button class="btn btn-primary" onclick="saveSupabaseConfig()">💾 حفظ واتصال فوري</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: تجربة إرسال رسالة -->
-  <div id="simModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>⚡ تجربة إرسال رسالة إلى دالة Supabase RPC</h3>
-        <button class="btn" onclick="closeSimModal()">✕</button>
-      </div>
-      <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="action-btn link-btn" onclick="fillPresetValid()">+ توليد رسالة فودافون كاش صحيحة</button>
-        <button class="action-btn" onclick="fillPresetError()">+ توليد رسالة غير مطابقة (Error)</button>
-      </div>
-      <div class="form-group">
-        <label>معرف الجهاز (device_id)</label>
-        <input type="text" id="simDevice" value="Sales_Phone_1" />
-      </div>
-      <div class="form-group">
-        <label>نص الرسالة (raw_message)</label>
-        <textarea id="simMessage"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeSimModal()">إلغاء</button>
-        <button class="btn btn-primary" onclick="sendTestPayment()">🚀 إرسال إلى Supabase</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: مراجعة وتعديل دفعة -->
-  <div id="editModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>✎ مراجعة وتعديل التحويل #<span id="editRowIdLabel"></span></h3>
-        <button class="btn" onclick="closeEditModal()">✕</button>
-      </div>
-      <input type="hidden" id="editRowId" />
-      <div class="form-group">
-        <label>نص الرسالة الخام</label>
-        <textarea id="editRawMessage" readonly style="opacity:0.75;"></textarea>
-      </div>
-      <div class="form-group">
-        <label>المبلغ المحول (جنيه)</label>
-        <input type="number" step="0.01" id="editAmount" />
-      </div>
-      <div class="form-group">
-        <label>رقم هاتف المحول</label>
-        <input type="text" id="editPhone" />
-      </div>
-      <div class="form-group">
-        <label>رقم العملية</label>
-        <input type="text" id="editTxId" />
-      </div>
-      <div class="form-group">
-        <label>الحالة</label>
-        <select id="editStatus">
-          <option value="unlinked">غير مربوط (unlinked)</option>
-          <option value="linked">تم الربط (linked)</option>
-          <option value="error">خطأ / مراجعة يدوية (error)</option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeEditModal()">إلغاء</button>
-        <button class="btn btn-primary" onclick="saveEditedPayment()">💾 حفظ التعديلات</button>
-      </div>
-    </div>
-  </div>
-
   <div id="toastContainer" class="toast-container"></div>
 
   <script>
-    // يمكنك وضع بيانات مشروعك هنا مباشرة أو إدخالها من زر "⚙️ إعدادات Supabase" في الواجهة
     const DEFAULT_SUPABASE_URL = 'https://wbpotzyvvdirytnugzlb.supabase.co';
     const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_t1_zYtk_-EoGnWF--nx9vg_zkQxXsxA';
 
-    let sbClient = null;
-    let realtimeChannel = null;
+    let sbClient = window.supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_ANON_KEY);
     let allPayments = [];
     let currentFilter = 'all';
     let lastAddedId = null;
 
-    function getCredentials() {
+    function parseVodafoneCashSms(raw) {
+      if (!raw || typeof raw !== 'string') return {};
+      const amountMatch = raw.match(/مبلغ\s*([\d.]+)\s*جنيه/);
+      const senderPhoneMatch = raw.match(/من(?:\s+رقم)?\s*(01[0-9]{9})/);
+      const senderNameMatch = raw.match(/المسجل ب[إا]سم\s+(.+?)\s+على رقم محفظتك/);
+      const walletPhoneMatch = raw.match(/على رقم محفظتك\s*(01[0-9]{9})/);
+      const txIdMatch = raw.match(/رقم العملية\s*:\s*(\d+)/);
       return {
-        url: (localStorage.getItem('SB_URL') || DEFAULT_SUPABASE_URL).trim(),
-        key: (localStorage.getItem('SB_KEY') || DEFAULT_SUPABASE_ANON_KEY).trim(),
+        amount: amountMatch ? parseFloat(amountMatch[1]) : null,
+        sender_phone: senderPhoneMatch ? senderPhoneMatch[1] : null,
+        sender_name: senderNameMatch ? senderNameMatch[1].trim() : null,
+        wallet_phone: walletPhoneMatch ? walletPhoneMatch[1] : null,
+        transaction_id: txIdMatch ? txIdMatch[1] : null,
       };
     }
 
-    async function initSupabase() {
-      const { url, key } = getCredentials();
-      if (!url || !key) {
-        updateConnBadge(false, 'اضغط ⚙️ لإدخال بيانات Supabase');
-        renderTable();
-        openConfigModal();
-        return;
-      }
+    async function enrichAndHealRow(row) {
+      const parsed = parseVodafoneCashSms(row.raw_message || '');
+      const hasValidTransfer = parsed.amount !== null && parsed.sender_phone && parsed.transaction_id;
+      row._sender_name = row.sender_name || parsed.sender_name || null;
+      row._wallet_phone = row.wallet_phone || parsed.wallet_phone || null;
 
-      try {
-        sbClient = window.supabase.createClient(url, key);
-        await loadPayments();
-        subscribeRealtime();
-      } catch (err) {
-        console.error(err);
-        updateConnBadge(false, 'خطأ في إعدادات Supabase');
-      }
-    }
+      if (hasValidTransfer && (row.status === 'error' || !row.sender_phone || !row.transaction_id || row.amount === null)) {
+        row.amount = parsed.amount;
+        row.sender_phone = parsed.sender_phone;
+        row.transaction_id = parsed.transaction_id;
+        if (row.status === 'error') row.status = 'unlinked';
 
-    function subscribeRealtime() {
-      if (!sbClient) return;
-      if (realtimeChannel) {
-        sbClient.removeChannel(realtimeChannel);
+        if (sbClient && row.id) {
+          await sbClient.from('incoming_payments').update({
+            amount: parsed.amount,
+            sender_phone: parsed.sender_phone,
+            sender_name: row._sender_name,
+            wallet_phone: row._wallet_phone,
+            transaction_id: parsed.transaction_id,
+            status: row.status,
+          }).eq('id', row.id);
+        }
       }
-
-      realtimeChannel = sbClient
-        .channel('incoming-payments-live')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'incoming_payments' },
-          (payload) => {
-            if (payload.eventType === 'INSERT') {
-              const newRow = payload.new;
-              if (!allPayments.some((p) => p.id === newRow.id)) {
-                allPayments.unshift(newRow);
-                lastAddedId = newRow.id;
-                updateDashboard();
-                if (newRow.status === 'error') {
-                  showToast('⚠️ رسالة جديدة للمراجعة اليدوية', `الجهاز: ${newRow.device_id || ''}`, true);
-                } else {
-                  showToast(
-                    `💸 تحويل جديد: ${Number(newRow.amount).toFixed(2)} ج.م`,
-                    `من: ${newRow.sender_phone} | عملية: #${newRow.transaction_id}`
-                  );
-                }
-              }
-            } else if (payload.eventType === 'UPDATE') {
-              const updated = payload.new;
-              const idx = allPayments.findIndex((p) => p.id === updated.id);
-              if (idx !== -1) {
-                allPayments[idx] = updated;
-                updateDashboard();
-              }
-            } else if (payload.eventType === 'DELETE') {
-              const deletedId = payload.old.id;
-              allPayments = allPayments.filter((p) => p.id !== deletedId);
-              updateDashboard();
-            }
-          }
-        )
-        .subscribe((status) => {
-          if (status === 'SUBSCRIBED') {
-            updateConnBadge(true, 'متصل لحظياً (Supabase Realtime)');
-          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            updateConnBadge(false, 'انقطع الاتصال اللحظي');
-          }
-        });
+      return row;
     }
 
     async function loadPayments() {
-      if (!sbClient) return;
-      const { data, error } = await sbClient
-        .from('incoming_payments')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(500);
-
-      if (error) {
-        showToast('❌ خطأ جلب البيانات', error.message, true);
-        return;
-      }
-      allPayments = data || [];
+      const { data, error } = await sbClient.from('incoming_payments').select('*').order('created_at', { ascending: false }).limit(500);
+      if (error) return showToast('❌ خطأ', error.message, true);
+      const rows = data || [];
+      for (const r of rows) await enrichAndHealRow(r);
+      allPayments = rows;
       updateDashboard();
     }
 
-    function updateConnBadge(connected, text) {
-      const badge = document.getElementById('connBadge');
-      badge.classList.toggle('disconnected', !connected);
-      document.getElementById('connText').textContent = text;
+    function subscribeRealtime() {
+      sbClient.channel('incoming-payments-live')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'incoming_payments' }, async (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const newRow = await enrichAndHealRow(payload.new);
+            if (!allPayments.some((p) => p.id === newRow.id)) {
+              allPayments.unshift(newRow);
+              lastAddedId = newRow.id;
+              updateDashboard();
+              if (newRow.status !== 'error') {
+                showToast(`💸 تحويل جديد: ${Number(newRow.amount).toFixed(2)} ج.م`, `من: ${newRow.sender_phone} إلى محفظة: ${newRow._wallet_phone || '—'}`);
+              }
+            }
+          } else if (payload.eventType === 'UPDATE') {
+            const updated = await enrichAndHealRow(payload.new);
+            const idx = allPayments.findIndex((p) => p.id === updated.id);
+            if (idx !== -1) { allPayments[idx] = updated; updateDashboard(); }
+          } else if (payload.eventType === 'DELETE') {
+            allPayments = allPayments.filter((p) => p.id !== payload.old.id);
+            updateDashboard();
+          }
+        })
+        .subscribe((status) => {
+          const badge = document.getElementById('connBadge');
+          const ok = status === 'SUBSCRIBED';
+          badge.classList.toggle('disconnected', !ok);
+          document.getElementById('connText').textContent = ok ? 'متصل لحظياً (Supabase Realtime)' : 'انقطع الاتصال';
+        });
     }
 
     function updateDashboard() {
-      let totalAmount = 0;
-      let validCount = 0;
-      let unlinkedCount = 0;
-      let unlinkedAmount = 0;
-      let linkedCount = 0;
-      let linkedAmount = 0;
-      let errorCount = 0;
-
+      let totalAmount = 0, validCount = 0, unlinkedCount = 0, unlinkedAmount = 0, linkedCount = 0, linkedAmount = 0, errorCount = 0;
       for (const p of allPayments) {
         const amt = p.amount !== null ? parseFloat(p.amount) : 0;
-        if (p.status !== 'error' && p.amount !== null) {
-          totalAmount += amt;
-          validCount++;
-        }
-        if (p.status === 'unlinked') {
-          unlinkedCount++;
-          unlinkedAmount += amt;
-        } else if (p.status === 'linked') {
-          linkedCount++;
-          linkedAmount += amt;
-        } else if (p.status === 'error') {
-          errorCount++;
-        }
+        if (p.status !== 'error' && p.amount !== null) { totalAmount += amt; validCount++; }
+        if (p.status === 'unlinked') { unlinkedCount++; unlinkedAmount += amt; }
+        else if (p.status === 'linked') { linkedCount++; linkedAmount += amt; }
+        else if (p.status === 'error') { errorCount++; }
       }
-
       document.getElementById('kpiTotalAmount').textContent = `${totalAmount.toFixed(2)} ج.م`;
-      document.getElementById('kpiTotalCount').textContent = `إجمالي ${validCount} عملية صحيحة`;
+      document.getElementById('kpiTotalCount').textContent = `إجمالي ${validCount} عملية تحويل صحيحة`;
       document.getElementById('kpiUnlinkedCount').textContent = unlinkedCount;
       document.getElementById('kpiUnlinkedAmount').textContent = `بقيمة ${unlinkedAmount.toFixed(2)} ج.م`;
       document.getElementById('kpiLinkedCount').textContent = linkedCount;
       document.getElementById('kpiLinkedAmount').textContent = `بقيمة ${linkedAmount.toFixed(2)} ج.م`;
       document.getElementById('kpiErrorCount').textContent = errorCount;
-
       document.getElementById('tabCountAll').textContent = allPayments.length;
       document.getElementById('tabCountUnlinked').textContent = unlinkedCount;
       document.getElementById('tabCountLinked').textContent = linkedCount;
       document.getElementById('tabCountError').textContent = errorCount;
-
       renderTable();
     }
 
     function setFilter(f) {
       currentFilter = f;
-      document.querySelectorAll('.tab-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.filter === f);
-      });
+      document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.toggle('active', btn.dataset.filter === f));
       renderTable();
     }
 
     function renderTable() {
       const tbody = document.getElementById('paymentsTableBody');
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
-
       const filtered = allPayments.filter((p) => {
         if (currentFilter !== 'all' && p.status !== currentFilter) return false;
         if (!q) return true;
         return (
           (p.sender_phone && p.sender_phone.toLowerCase().includes(q)) ||
+          (p._sender_name && p._sender_name.toLowerCase().includes(q)) ||
+          (p._wallet_phone && p._wallet_phone.toLowerCase().includes(q)) ||
           (p.transaction_id && p.transaction_id.toLowerCase().includes(q)) ||
           (p.device_id && p.device_id.toLowerCase().includes(q)) ||
           (p.raw_message && p.raw_message.toLowerCase().includes(q)) ||
-          String(p.id).includes(q)
+          String(p.amount || '').includes(q)
         );
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="9">
-              <div class="empty-state">
-                <h3>📭 لا توجد تحويلات للعرض حالياً</h3>
-                <p style="margin-top:6px;font-size:0.85rem;">تأكد من إعداد بيانات Supabase أو اضغط "⚡ تجربة إرسال رسالة".</p>
+        tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><h3>📭 لا توجد تحويلات مطابقة للعرض حالياً</h3></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((p) => {
+        const isNew = p.id === lastAddedId;
+        const amountHtml = p.amount !== null
+          ? `<span class="amount-badge mono">${Number(p.amount).toFixed(2)}</span> <small>ج.م</small>`
+          : `<span style="color:var(--rose);font-size:0.8rem;">غير مستخرج</span>`;
+
+        const senderPhoneHtml = p.sender_phone
+          ? `<div>
+               <span class="copy-chip sender-chip mono" onclick="copyText('${p.sender_phone}', 'رقم المحول منه')">📲 ${p.sender_phone} 📋</span>
+               ${p._sender_name ? `<span class="sender-name-sub">👤 ${escapeHtml(p._sender_name)}</span>` : ''}
+             </div>`
+          : '—';
+
+        const walletPhoneHtml = p._wallet_phone
+          ? `<span class="copy-chip wallet-chip mono" onclick="copyText('${p._wallet_phone}', 'رقم محفظتنا')">🏦 ${p._wallet_phone} 📋</span>`
+          : '—';
+
+        const txHtml = p.transaction_id
+          ? `<span class="copy-chip tx-chip mono" onclick="copyText('${p.transaction_id}', 'رقم العملية')">#${p.transaction_id} 📋</span>`
+          : '—';
+
+        const deviceHtml = p.device_id ? `<span class="device-tag">📱 ${escapeHtml(p.device_id)}</span>` : '—';
+        const statusBadge = p.status === 'unlinked'
+          ? `<span class="status-pill status-unlinked">⏳ غير مربوط</span>`
+          : p.status === 'linked'
+          ? `<span class="status-pill status-linked">✅ تم الربط</span>`
+          : `<span class="status-pill status-error">⚠️ غير تحويل</span>`;
+
+        const dateStr = p.created_at ? new Date(p.created_at).toLocaleString('ar-EG') : '—';
+        const toggleBtn = p.status === 'linked'
+          ? `<button class="action-btn" onclick="quickToggleStatus(${p.id}, 'unlinked')">إلغاء الربط</button>`
+          : `<button class="action-btn link-btn" onclick="quickToggleStatus(${p.id}, 'linked')">✓ ربط التحويل</button>`;
+
+        return `
+          <tr class="${isNew ? 'new-row-flash' : ''}">
+            <td class="mono">#${p.id}</td>
+            <td>${amountHtml}</td>
+            <td>${senderPhoneHtml}</td>
+            <td>${walletPhoneHtml}</td>
+            <td>${txHtml}</td>
+            <td>${deviceHtml}</td>
+            <td><div class="raw-msg">${escapeHtml(p.raw_message || '')}</div></td>
+            <td>${statusBadge}</td>
+            <td style="font-size:0.8rem;color:var(--text-secondary);white-space:nowrap;">${dateStr}</td>
+            <td>
+              <div class="row-actions">
+                ${p.status !== 'error' ? toggleBtn : ''}
+                <button class="action-btn" onclick="deletePayment(${p.id})">🗑</button>
               </div>
             </td>
           </tr>
         `;
-        return;
-      }
-
-      tbody.innerHTML = filtered
-        .map((p) => {
-          const isNew = p.id === lastAddedId;
-          const amountHtml =
-            p.amount !== null
-              ? `<span class="amount-badge mono">${Number(p.amount).toFixed(2)}</span> <small>ج.م</small>`
-              : `<span style="color:var(--rose);font-size:0.8rem;">غير مستخرج</span>`;
-
-          const phoneHtml = p.sender_phone
-            ? `<span class="copy-chip mono" onclick="copyText('${p.sender_phone}', 'رقم الهاتف')">📱 ${p.sender_phone}</span>`
-            : '—';
-
-          const txHtml = p.transaction_id
-            ? `<span class="copy-chip mono" onclick="copyText('${p.transaction_id}', 'رقم العملية')">#${p.transaction_id}</span>`
-            : '—';
-
-          const deviceHtml = p.device_id
-            ? `<span class="device-tag">📲 ${escapeHtml(p.device_id)}</span>`
-            : '—';
-
-          const statusBadge =
-            p.status === 'unlinked'
-              ? `<span class="status-pill status-unlinked">⏳ غير مربوط</span>`
-              : p.status === 'linked'
-              ? `<span class="status-pill status-linked">✅ تم الربط</span>`
-              : `<span class="status-pill status-error">⚠️ مراجعة يدوية</span>`;
-
-          const dateStr = p.created_at
-            ? new Date(p.created_at).toLocaleString('ar-EG')
-            : '—';
-
-          const toggleBtn =
-            p.status === 'linked'
-              ? `<button class="action-btn" onclick="quickToggleStatus(${p.id}, 'unlinked')">إلغاء الربط</button>`
-              : `<button class="action-btn link-btn" onclick="quickToggleStatus(${p.id}, 'linked')">✓ ربط التحويل</button>`;
-
-          return `
-            <tr class="${isNew ? 'new-row-flash' : ''}">
-              <td class="mono">#${p.id}</td>
-              <td>${amountHtml}</td>
-              <td>${phoneHtml}</td>
-              <td>${txHtml}</td>
-              <td>${deviceHtml}</td>
-              <td><div class="raw-msg">${escapeHtml(p.raw_message || '')}</div></td>
-              <td>${statusBadge}</td>
-              <td style="font-size:0.8rem;color:var(--text-secondary);white-space:nowrap;">${dateStr}</td>
-              <td>
-                <div class="row-actions">
-                  ${p.status !== 'error' ? toggleBtn : ''}
-                  <button class="action-btn" onclick="openEditModal(${p.id})">✎ مراجعة</button>
-                  <button class="action-btn" onclick="deletePayment(${p.id})">🗑</button>
-                </div>
-              </td>
-            </tr>
-          `;
-        })
-        .join('');
+      }).join('');
     }
 
     async function quickToggleStatus(id, status) {
-      if (!sbClient) return;
-      const { error } = await sbClient
-        .from('incoming_payments')
-        .update({ status })
-        .eq('id', id);
-
-      if (error) {
-        showToast('❌ خطأ', error.message, true);
-      } else {
-        showToast('✅ تم التحديث', `تم تحديث حالة العملية #${id}`);
-        loadPayments();
-      }
-    }
-
-    function openEditModal(id) {
-      const p = allPayments.find((x) => x.id === id);
-      if (!p) return;
-      document.getElementById('editRowIdLabel').textContent = p.id;
-      document.getElementById('editRowId').value = p.id;
-      document.getElementById('editRawMessage').value = p.raw_message || '';
-      document.getElementById('editAmount').value = p.amount !== null ? p.amount : '';
-      document.getElementById('editPhone').value = p.sender_phone || '';
-      document.getElementById('editTxId').value = p.transaction_id || '';
-      document.getElementById('editStatus').value = p.status || 'unlinked';
-      document.getElementById('editModal').classList.add('open');
-    }
-
-    function closeEditModal() {
-      document.getElementById('editModal').classList.remove('open');
-    }
-
-    async function saveEditedPayment() {
-      if (!sbClient) return;
-      const id = Number(document.getElementById('editRowId').value);
-      const amountVal = document.getElementById('editAmount').value;
-      const sender_phone = document.getElementById('editPhone').value.trim() || null;
-      const transaction_id = document.getElementById('editTxId').value.trim() || null;
-      const status = document.getElementById('editStatus').value;
-
-      const { error } = await sbClient
-        .from('incoming_payments')
-        .update({
-          amount: amountVal !== '' ? Number(amountVal) : null,
-          sender_phone,
-          transaction_id,
-          status,
-        })
-        .eq('id', id);
-
-      if (error) {
-        showToast('❌ خطأ الحفظ', error.message, true);
-      } else {
-        closeEditModal();
-        showToast('✅ تم الحفظ', `تم تعديل العملية #${id} بنجاح`);
-        loadPayments();
-      }
+      await sbClient.from('incoming_payments').update({ status }).eq('id', id);
+      loadPayments();
     }
 
     async function deletePayment(id) {
-      if (!sbClient || !confirm(`حذف السجل #${id}؟`)) return;
-      const { error } = await sbClient.from('incoming_payments').delete().eq('id', id);
-      if (error) {
-        showToast('❌ خطأ', error.message, true);
-      } else {
-        showToast('🗑 تم الحذف', `تم حذف السجل #${id}`);
-        loadPayments();
-      }
-    }
-
-    function openConfigModal() {
-      const { url, key } = getCredentials();
-      document.getElementById('cfgUrl').value = url;
-      document.getElementById('cfgKey').value = key;
-      document.getElementById('configModal').classList.add('open');
-    }
-
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.remove('open');
-    }
-
-    function saveSupabaseConfig() {
-      const url = document.getElementById('cfgUrl').value.trim();
-      const key = document.getElementById('cfgKey').value.trim();
-      if (!url || !key) {
-        showToast('⚠️ تنبيه', 'يرجى إدخال الرابط والمفتاح معاً', true);
-        return;
-      }
-      localStorage.setItem('SB_URL', url);
-      localStorage.setItem('SB_KEY', key);
-      closeConfigModal();
-      initSupabase();
-    }
-
-    function openSimModal() {
-      fillPresetValid();
-      document.getElementById('simModal').classList.add('open');
-    }
-
-    function closeSimModal() {
-      document.getElementById('simModal').classList.remove('open');
-    }
-
-    function fillPresetValid() {
-      const amounts = [250, 400, 550, 750, 1000];
-      const amt = amounts[Math.floor(Math.random() * amounts.length)];
-      const phone = '010' + Math.floor(10000000 + Math.random() * 89999999);
-      const tx = Math.floor(1000000000 + Math.random() * 8999999999);
-      document.getElementById('simMessage').value =
-        `تم استلام مبلغ ${amt}.00 جنيه من ${phone} في محفظتك. رقم العملية : ${tx}`;
-    }
-
-    function fillPresetError() {
-      document.getElementById('simMessage').value =
-        'رسالة نصية غير مطابقة للصيغة القياسية وتحتاج مراجعة يدوية من الموظف.';
-    }
-
-    async function sendTestPayment() {
-      if (!sbClient) {
-        showToast('⚠️ تنبيه', 'قم بإعداد اتصال Supabase أولاً', true);
-        return;
-      }
-      const p_device_id = document.getElementById('simDevice').value.trim() || 'Sales_Phone_1';
-      const p_raw_message = document.getElementById('simMessage').value.trim();
-      if (!p_raw_message) return;
-
-      const { data, error } = await sbClient.rpc('ingest_sms_payment', {
-        p_raw_message,
-        p_device_id,
-      });
-
-      if (error) {
-        showToast('❌ خطأ الإرسال', error.message, true);
-      } else {
-        closeSimModal();
-        loadPayments();
-      }
+      if (!confirm(`حذف السجل #${id}؟`)) return;
+      await sbClient.from('incoming_payments').delete().eq('id', id);
+      loadPayments();
     }
 
     function copyText(text, label) {
@@ -1116,11 +468,7 @@
     }
 
     function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function showToast(title, desc, isError = false) {
@@ -1132,7 +480,8 @@
       setTimeout(() => t.remove(), 4000);
     }
 
-    initSupabase();
+    loadPayments();
+    subscribeRealtime();
   </script>
 </body>
 </html>
