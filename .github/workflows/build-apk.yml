@@ -7,12 +7,8 @@ on:
       - master
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build-android-apk:
-    name: بناء تطبيق الأندرويد (APK)
+  build-apk:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,32 +21,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle 8.7
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
-
       - name: Build Debug APK
         working-directory: ./android-app
-        run: gradle assembleDebug --no-daemon
-
-      - name: Rename APK for Easy Download
         run: |
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk SMS-Payment-Monitor.apk
+          gradle assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../SMS-Payment-Monitor.apk
 
-      - name: Upload APK as GitHub Action Artifact
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: SMS-Payment-Monitor-APK
           path: SMS-Payment-Monitor.apk
-          retention-days: 90
-
-      - name: Publish APK to GitHub Releases
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.0
-          name: "تطبيق راصد مدفوعات SMS (APK)"
-          body: "حمّل ملف SMS-Payment-Monitor.apk وثبته مباشرة على التليفون."
-          files: SMS-Payment-Monitor.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
