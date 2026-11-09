@@ -3,266 +3,320 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>راصد المدفوعات اللحظي | Supabase Realtime</title>
+  <title>نبض المدفوعات | لوحة رصد تحويلات فودافون كاش والـ CRM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Cairo', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+          boxShadow: { soft: '0 2px 14px -4px rgba(15, 23, 42, 0.04), 0 1px 4px -1px rgba(15, 23, 42, 0.02)' },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
   <style>
-    :root {
-      --bg-base: #090d16;
-      --bg-surface: #111827;
-      --bg-card: rgba(17, 24, 39, 0.84);
-      --bg-card-hover: rgba(31, 41, 55, 0.9);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --text-primary: #f9fafb;
-      --text-secondary: #9ca3af;
-      --text-muted: #6b7280;
-      --emerald: #10b981;
-      --emerald-bg: rgba(16, 185, 129, 0.12);
-      --amber: #f59e0b;
-      --amber-bg: rgba(245, 158, 11, 0.12);
-      --rose: #f43f5e;
-      --rose-bg: rgba(244, 63, 94, 0.12);
-      --indigo: #6366f1;
-      --indigo-bg: rgba(99, 102, 241, 0.14);
-      --cyan: #06b6d4;
-      --cyan-bg: rgba(6, 182, 212, 0.14);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Cairo', sans-serif;
-      background-color: var(--bg-base);
-      background-image:
-        radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.12), transparent 35%),
-        radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.12), transparent 35%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-    .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; display: inline-block; }
-    .container { max-width: 1460px; margin: 0 auto; padding: 26px 22px 60px; }
-    .header {
-      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-      gap: 16px; padding-bottom: 22px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 26px;
-    }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .brand-icon {
-      width: 48px; height: 48px; border-radius: 14px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); font-size: 22px;
-    }
-    .brand-title h1 { font-size: 1.42rem; font-weight: 800; }
-    .brand-title p { font-size: 0.85rem; color: var(--text-secondary); }
-    .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .conn-badge {
-      display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
-      border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.28); color: #34d399;
-    }
-    .conn-badge.disconnected { background: var(--rose-bg); border-color: rgba(244, 63, 94, 0.3); color: #fb7185; }
-    .pulse-dot { width: 9px; height: 9px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; }
-    .conn-badge.disconnected .pulse-dot { background: var(--rose); animation: none; }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-    .btn {
-      font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
-      padding: 9px 15px; border-radius: 10px; border: 1px solid var(--border-subtle);
-      background: var(--bg-surface); color: var(--text-primary); cursor: pointer;
-      display: inline-flex; align-items: center; gap: 7px; transition: all 0.2s ease;
-    }
-    .btn:hover { background: var(--bg-card-hover); border-color: rgba(255, 255, 255, 0.18); }
-    .btn-primary { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: rgba(16, 185, 129, 0.5); }
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 24px; }
-    .kpi-card {
-      background: var(--bg-card); backdrop-filter: blur(12px);
-      border: 1px solid var(--border-subtle); border-radius: 16px; padding: 20px 22px;
-    }
-    .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .kpi-title { font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); }
-    .kpi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-    .kpi-value { font-size: 1.72rem; font-weight: 800; margin-bottom: 5px; }
-    .kpi-sub { font-size: 0.78rem; color: var(--text-muted); }
-    .controls-bar {
-      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px;
-      padding: 16px 20px; display: flex; flex-wrap: wrap; justify-content: space-between;
-      align-items: center; gap: 16px; margin-bottom: 20px;
-    }
-    .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tab-btn {
-      font-family: 'Cairo', sans-serif; font-size: 0.84rem; font-weight: 700;
-      padding: 7px 14px; border-radius: 9px; border: 1px solid transparent;
-      background: rgba(255, 255, 255, 0.04); color: var(--text-secondary); cursor: pointer;
-      display: inline-flex; align-items: center; gap: 7px;
-    }
-    .tab-btn.active { background: rgba(16, 185, 129, 0.16); border-color: rgba(16, 185, 129, 0.45); color: #34d399; }
-    .tab-count { font-size: 0.74rem; padding: 1px 7px; border-radius: 99px; background: rgba(255, 255, 255, 0.08); }
-    .search-box { position: relative; flex: 1; min-width: 280px; max-width: 440px; }
-    .search-box input {
-      width: 100%; font-family: 'Cairo', sans-serif; font-size: 0.88rem;
-      padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border-subtle);
-      background: rgba(9, 13, 22, 0.75); color: var(--text-primary); outline: none;
-    }
-    .table-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; }
-    .table-responsive { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: right; }
-    thead { background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border-subtle); }
-    th { padding: 14px 14px; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
-    td { padding: 14px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 0.87rem; vertical-align: middle; }
-    tbody tr.new-row-flash { animation: flashRow 2.6s ease-out; }
-    @keyframes flashRow { 0% { background: rgba(16, 185, 129, 0.32); } 100% { background: transparent; } }
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px;
-      border-radius: 999px; font-size: 0.78rem; font-weight: 700; white-space: nowrap;
-    }
-    .status-unlinked { background: var(--amber-bg); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .status-linked { background: var(--emerald-bg); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .status-error { background: var(--rose-bg); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-    .amount-badge { font-size: 1.05rem; font-weight: 800; color: #34d399; }
-    .copy-chip {
-      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
-      border-radius: 8px; background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;
-      font-size: 0.84rem; font-weight: 600; transition: all 0.15s ease; white-space: nowrap;
-    }
-    .copy-chip:hover { background: rgba(16, 185, 129, 0.18); border-color: rgba(16, 185, 129, 0.45); transform: translateY(-1px); }
-    .wallet-chip { background: var(--cyan-bg); border-color: rgba(6, 182, 212, 0.35); color: #67e8f9; }
-    .sender-chip { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.32); color: #fde68a; }
-    .tx-chip { background: var(--indigo-bg); border-color: rgba(99, 102, 241, 0.35); color: #c7d2fe; }
-    .sender-name-sub { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-top: 3px; }
-    .raw-msg { max-width: 310px; font-size: 0.8rem; color: var(--text-secondary); word-break: break-word; line-height: 1.45; }
-    .device-tag {
-      display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem;
-      color: #a5b4fc; background: rgba(99, 102, 241, 0.14); padding: 3px 9px; border-radius: 6px; white-space: nowrap;
-    }
-    .row-actions { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .action-btn {
-      font-family: 'Cairo', sans-serif; font-size: 0.76rem; font-weight: 700;
-      padding: 5px 10px; border-radius: 7px; border: 1px solid var(--border-subtle);
-      background: rgba(255, 255, 255, 0.05); color: var(--text-primary); cursor: pointer;
-    }
-    .action-btn.link-btn { background: rgba(16, 185, 129, 0.14); border-color: rgba(16, 185, 129, 0.35); color: #34d399; }
-    .empty-state { text-align: center; padding: 64px 20px; color: var(--text-secondary); }
-    .toast-container { position: fixed; bottom: 24px; left: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-    .toast {
-      background: rgba(17, 24, 39, 0.96); border-right: 4px solid var(--emerald);
-      border-top: 1px solid var(--border-subtle); border-left: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle); padding: 13px 18px; border-radius: 12px; min-width: 280px;
-    }
-    .toast.error-toast { border-right-color: var(--rose); }
+    body { font-family: 'Cairo', sans-serif; background-color: #F8FAFC; color: #1F2937; }
+    @keyframes flashPastel { 0% { background-color: rgba(167, 243, 208, 0.55); } 100% { background-color: transparent; } }
+    .new-row-flash { animation: flashPastel 2.8s ease-out; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <header class="header">
-      <div class="brand">
-        <div class="brand-icon">⚡</div>
-        <div class="brand-title">
-          <h1>راصد المدفوعات السحابي (Supabase Realtime)</h1>
-          <p>استخراج فوري لـ (المبلغ • رقم المحول منه واسمه • رقم محفظتنا • رقم العملية) بضغطة نسخ واحدة</p>
+<body class="min-h-screen bg-[#F8FAFC] text-gray-800 antialiased flex">
+
+  <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 z-30 bg-gray-900/20 backdrop-blur-xs hidden lg:hidden"></div>
+
+  <!-- القائمة الجانبية -->
+  <aside id="sidebar" class="fixed top-0 right-0 z-40 h-screen w-72 bg-white border-l border-gray-100 shadow-soft transition-transform duration-300 translate-x-full lg:static lg:translate-x-0 flex flex-col justify-between shrink-0">
+    <div>
+      <div class="flex items-center justify-between px-6 py-6 border-b border-gray-50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100/80">
+            <i data-lucide="wallet" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h1 class="text-base font-extrabold text-gray-900 tracking-tight">نبض المدفوعات</h1>
+            <p class="text-xs text-gray-400">رصد التحويلات & التقفيل اليومي</p>
+          </div>
+        </div>
+        <button onclick="toggleSidebar(false)" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 lg:hidden">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <nav class="p-4 space-y-1.5">
+        <p class="px-3 pb-2 text-[11px] font-bold text-gray-400">القائمة الرئيسية</p>
+        <button onclick="setFilter('all'); toggleSidebar(false);" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold bg-indigo-50/80 text-indigo-700 transition-all">
+          <div class="flex items-center gap-3"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span>لوحة التحكم (الكل)</span></div>
+          <span id="sideCountAll" class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700 font-bold">0</span>
+        </button>
+        <button onclick="setFilter('unlinked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
+          <div class="flex items-center gap-3"><i data-lucide="filter" class="w-5 h-5 text-amber-500"></i><span>تحويلات بانتظار الربط</span></div>
+          <span id="sideCountUnlinked" class="px-2 py-0.5 text-xs rounded-full bg-amber-50 text-amber-700 font-bold">0</span>
+        </button>
+        <button onclick="setFilter('linked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
+          <div class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i><span>تحويلات تم ربطها</span></div>
+          <span id="sideCountLinked" class="px-2 py-0.5 text-xs rounded-full bg-emerald-50 text-emerald-700 font-bold">0</span>
+        </button>
+        <button onclick="setFilter('error'); toggleSidebar(false);" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
+          <div class="flex items-center gap-3"><i data-lucide="message-square-warning" class="w-5 h-5 text-rose-500"></i><span>رسائل أخرى / مراجعة</span></div>
+          <span id="sideCountError" class="px-2 py-0.5 text-xs rounded-full bg-rose-50 text-rose-700 font-bold">0</span>
+        </button>
+        <button onclick="openConfigModal(); toggleSidebar(false);" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
+          <div class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5 text-gray-400"></i><span>إعدادات الربط (Supabase)</span></div>
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-gray-50">
+      <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100/80">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold text-emerald-900">حالة الرصد السحابي</span>
+          <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>نشط 24/7
+          </span>
+        </div>
+        <p class="text-xs text-emerald-700/80 mb-2.5">يتم استقبال رسائل فودافون كاش لحظياً من الهواتف</p>
+        <div class="w-full h-1.5 bg-emerald-100 rounded-full overflow-hidden">
+          <div class="h-full bg-emerald-500 rounded-full w-full"></div>
         </div>
       </div>
-      <div class="header-actions">
-        <div id="connBadge" class="conn-badge disconnected">
-          <span class="pulse-dot"></span>
-          <span id="connText">جاري الاتصال...</span>
+    </div>
+  </aside>
+
+  <!-- منطقة المحتوى الرئيسي -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="sticky top-0 z-20 bg-white/85 backdrop-blur-md border-b border-gray-100 px-6 py-4">
+      <div class="flex flex-wrap items-center justify-between gap-4 max-w-[1440px] mx-auto">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleSidebar(true)" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 lg:hidden">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h2 class="text-lg font-extrabold text-gray-900">مرحباً، عبد الرحمن 👋</h2>
+            <p class="text-xs text-gray-500">متابعة لحظية لتحويلات فودافون كاش وأرقام المحافظ والتقفيل اليومي</p>
+          </div>
         </div>
-        <button class="btn" onclick="loadPayments()">🔄 تحديث</button>
+
+        <div class="flex items-center gap-3 flex-1 sm:flex-initial justify-end flex-wrap">
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input type="text" id="searchInput" oninput="renderTable()" placeholder="ابحث برقم المحول، المحفظة، العملية، أو الاسم..." class="w-full pr-10 pl-4 py-2 text-sm text-gray-800 bg-gray-50/90 border border-gray-100 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-200 focus:ring-2 focus:ring-indigo-50 transition-all" />
+          </div>
+          <div id="connBadge" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-50/80 text-emerald-700 border border-emerald-100">
+            <span id="connDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="connText">متصل لحظياً</span>
+          </div>
+          <button onclick="loadPayments()" class="p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-100 transition-colors" title="تحديث البيانات">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          </button>
+          <button onclick="openSimModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-all">
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i><span>تجربة رسالة</span>
+          </button>
+        </div>
       </div>
     </header>
 
-    <section class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-title">إجمالي المبالغ المستلمة</span>
-          <div class="kpi-icon" style="background: var(--emerald-bg); color: var(--emerald);">💰</div>
+    <main class="flex-1 p-6 lg:p-8 max-w-[1440px] w-full mx-auto space-y-6">
+      <!-- بطاقات المؤشرات بألوان الباستيل -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <div class="rounded-2xl p-5 border bg-emerald-50/55 border-emerald-100/80 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-100/80 text-emerald-700"><i data-lucide="banknote" class="w-5 h-5"></i></div>
+            <span id="kpiTotalBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100/90 text-emerald-800">0 عملية صحيحة</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-500 mb-1">إجمالي التحويلات المستلمة</p>
+          <h3 id="kpiTotalAmount" class="text-2xl font-extrabold text-gray-900 mb-3">0.00 ج.م</h3>
+          <div class="w-full h-1.5 bg-white/80 rounded-full overflow-hidden mb-2"><div class="h-full rounded-full bg-emerald-500 w-full"></div></div>
+          <div class="flex items-center justify-between text-[11px] text-gray-500"><span>صافي التحويلات المؤكدة</span><span class="font-bold text-emerald-700">100%</span></div>
         </div>
-        <div class="kpi-value" id="kpiTotalAmount">0.00 ج.م</div>
-        <div class="kpi-sub" id="kpiTotalCount">إجمالي 0 عملية صحيحة</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-title">غير مربوطة (Unlinked)</span>
-          <div class="kpi-icon" style="background: var(--amber-bg); color: var(--amber);">⏳</div>
-        </div>
-        <div class="kpi-value" id="kpiUnlinkedCount" style="color: #fbbf24;">0</div>
-        <div class="kpi-sub" id="kpiUnlinkedAmount">بقيمة 0.00 ج.م</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-title">تم ربطها (Linked)</span>
-          <div class="kpi-icon" style="background: var(--emerald-bg); color: var(--emerald);">✅</div>
-        </div>
-        <div class="kpi-value" id="kpiLinkedCount" style="color: #34d399;">0</div>
-        <div class="kpi-sub" id="kpiLinkedAmount">بقيمة 0.00 ج.م</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-title">رسائل أخرى / مراجعة</span>
-          <div class="kpi-icon" style="background: var(--rose-bg); color: var(--rose);">⚠️</div>
-        </div>
-        <div class="kpi-value" id="kpiErrorCount" style="color: #fb7185;">0</div>
-        <div class="kpi-sub">استعلام رصيد أو رسائل غير تحويل</div>
-      </div>
-    </section>
 
-    <section class="controls-bar">
-      <div class="filter-tabs">
-        <button class="tab-btn active" data-filter="all" onclick="setFilter('all')">
-          الكل <span class="tab-count" id="tabCountAll">0</span>
-        </button>
-        <button class="tab-btn" data-filter="unlinked" onclick="setFilter('unlinked')">
-          ⏳ غير مربوط <span class="tab-count" id="tabCountUnlinked">0</span>
-        </button>
-        <button class="tab-btn" data-filter="linked" onclick="setFilter('linked')">
-          ✅ تم الربط <span class="tab-count" id="tabCountLinked">0</span>
-        </button>
-        <button class="tab-btn" data-filter="error" onclick="setFilter('error')">
-          ⚠️ رسائل أخرى <span class="tab-count" id="tabCountError">0</span>
-        </button>
-      </div>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ابحث برقم المحول، رقم المحفظة، رقم العملية، الاسم، أو المبلغ..." oninput="renderTable()" />
-      </div>
-    </section>
+        <div class="rounded-2xl p-5 border bg-amber-50/55 border-amber-100/80 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-100/80 text-amber-700"><i data-lucide="clock" class="w-5 h-5"></i></div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100/90 text-amber-800">بانتظار التفعيل</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-500 mb-1">تحويلات غير مربوطة (Unlinked)</p>
+          <h3 id="kpiUnlinkedCount" class="text-2xl font-extrabold text-gray-900 mb-3">0</h3>
+          <div class="w-full h-1.5 bg-white/80 rounded-full overflow-hidden mb-2"><div id="kpiUnlinkedBar" class="h-full rounded-full bg-amber-500 transition-all duration-500" style="width: 0%"></div></div>
+          <div class="flex items-center justify-between text-[11px] text-gray-500"><span id="kpiUnlinkedAmount">بقيمة 0.00 ج.م</span><span id="kpiUnlinkedPct" class="font-bold text-amber-700">0%</span></div>
+        </div>
 
-    <section class="table-card">
-      <div class="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>المبلغ</th>
-              <th>رقم المحول منه (والاسم)</th>
-              <th>رقم محفظتنا (المستلمة)</th>
-              <th>رقم العملية</th>
-              <th>الجهاز</th>
-              <th>نص الرسالة الخام</th>
-              <th>الحالة</th>
-              <th>وقت الوصول</th>
-              <th>إجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="paymentsTableBody"></tbody>
-        </table>
-      </div>
-    </section>
+        <div class="rounded-2xl p-5 border bg-sky-50/55 border-sky-100/80 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-sky-100/80 text-sky-700"><i data-lucide="check-check" class="w-5 h-5"></i></div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100/90 text-sky-800">تم التقفيل</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-500 mb-1">تحويلات تم ربطها (Linked)</p>
+          <h3 id="kpiLinkedCount" class="text-2xl font-extrabold text-gray-900 mb-3">0</h3>
+          <div class="w-full h-1.5 bg-white/80 rounded-full overflow-hidden mb-2"><div id="kpiLinkedBar" class="h-full rounded-full bg-sky-500 transition-all duration-500" style="width: 0%"></div></div>
+          <div class="flex items-center justify-between text-[11px] text-gray-500"><span id="kpiLinkedAmount">بقيمة 0.00 ج.م</span><span id="kpiLinkedPct" class="font-bold text-sky-700">0%</span></div>
+        </div>
+
+        <div class="rounded-2xl p-5 border bg-violet-50/55 border-violet-100/80 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-violet-100/80 text-violet-700"><i data-lucide="smartphone" class="w-5 h-5"></i></div>
+            <span id="kpiErrorBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-violet-100/90 text-violet-800">0 رسائل أخرى</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-500 mb-1">محفظتنا الأساسية المستلمة</p>
+          <h3 id="kpiPrimaryWallet" class="text-xl font-extrabold text-gray-900 font-mono mb-3" dir="ltr">—</h3>
+          <div class="w-full h-1.5 bg-white/80 rounded-full overflow-hidden mb-2"><div class="h-full rounded-full bg-violet-500 w-full"></div></div>
+          <div class="flex items-center justify-between text-[11px] text-gray-500"><span id="kpiDevicesCount">الأجهزة المتصلة: 1</span><button onclick="copyPrimaryWallet()" class="font-bold text-violet-700 hover:underline">نسخ رقم المحفظة</button></div>
+        </div>
+      </section>
+
+      <!-- قسم الرسم البياني وملخص المحافظ المستلمة -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-soft p-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-extrabold text-gray-900">منحنى تدفق التحويلات المستلمة</h3>
+                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">تحديث تلقائي</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5">تطور مبالغ التحويلات الواردة عبر فودافون كاش لآخر العمليات</p>
+            </div>
+          </div>
+          <div class="relative h-56 w-full pt-2">
+            <svg id="chartSvg" viewBox="0 0 700 200" class="w-full h-full overflow-visible" preserveAspectRatio="none"></svg>
+            <div id="chartLabels" class="flex justify-between text-center mt-2 pt-2 border-t border-gray-50 text-[11px] text-gray-400"></div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div>
+                <h3 class="text-base font-extrabold text-gray-900">أرصدة محافظنا المستلمة</h3>
+                <p class="text-xs text-gray-400">إجمالي ما استقبلته كل محفظة (اضغط للنسخ)</p>
+              </div>
+              <div class="w-9 h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center"><i data-lucide="landmark" class="w-5 h-5"></i></div>
+            </div>
+            <div id="walletsSummaryList" class="space-y-3"></div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+            <span>آخر رصيد ظاهر برسائل فودافون كاش:</span>
+            <span id="latestWalletBalance" class="font-extrabold text-emerald-700 font-mono" dir="ltr">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- جدول البيانات والتقفيل اليومي -->
+      <section class="bg-white rounded-2xl border border-gray-100 shadow-soft overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 class="text-base font-extrabold text-gray-900">سجل التحويلات والتقفيل اليومي (Incoming Payments)</h3>
+            <p class="text-xs text-gray-400 mt-0.5">اضغط على أي رقم (رقم المحول منه، رقم محفظتنا، أو رقم العملية) لنسخه فوراً بضغطة واحدة</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="setFilter('all')" data-tab="all" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60 transition-all">الكل (<span id="tabCountAll">0</span>)</button>
+            <button onclick="setFilter('unlinked')" data-tab="unlinked" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">قيد الانتظار (<span id="tabCountUnlinked">0</span>)</button>
+            <button onclick="setFilter('linked')" data-tab="linked" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">مكتمل / مربوط (<span id="tabCountLinked">0</span>)</button>
+            <button onclick="setFilter('error')" data-tab="error" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">رسائل أخرى (<span id="tabCountError">0</span>)</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right border-collapse">
+            <thead>
+              <tr class="bg-gray-50/70 text-gray-500 text-xs font-bold border-b border-gray-100">
+                <th class="py-3.5 px-5">#</th>
+                <th class="py-3.5 px-5">المبلغ المحول</th>
+                <th class="py-3.5 px-5">رقم المحول منه (والاسم)</th>
+                <th class="py-3.5 px-5">رقم محفظتنا (المستلمة)</th>
+                <th class="py-3.5 px-5">رقم العملية</th>
+                <th class="py-3.5 px-5">الجهاز</th>
+                <th class="py-3.5 px-5">نص الرسالة الخام</th>
+                <th class="py-3.5 px-5">الحالة</th>
+                <th class="py-3.5 px-5">وقت الوصول</th>
+                <th class="py-3.5 px-5">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody" class="divide-y divide-gray-100 text-sm"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <div id="toastContainer" class="toast-container"></div>
+  <!-- نافذة تجربة إرسال رسالة -->
+  <div id="simModal" class="fixed inset-0 z-50 bg-gray-900/30 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-xl w-full max-w-lg p-6">
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+        <h3 class="text-base font-extrabold text-gray-900">⚡ تجربة إرسال رسالة فودافون كاش</h3>
+        <button onclick="closeSimModal()" class="text-gray-400 hover:text-gray-700">✕</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">معرف الجهاز (Device ID)</label>
+          <input type="text" id="simDevice" value="Sales_Phone_1" class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">نص الرسالة (Message)</label>
+          <textarea id="simMessage" rows="4" class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl"></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="closeSimModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100">إلغاء</button>
+        <button onclick="sendTestPayment()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700">🚀 إرسال إلى Supabase</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إعدادات Supabase -->
+  <div id="configModal" class="fixed inset-0 z-50 bg-gray-900/30 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-xl w-full max-w-lg p-6">
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+        <h3 class="text-base font-extrabold text-gray-900">⚙️ إعدادات الاتصال بـ Supabase</h3>
+        <button onclick="closeConfigModal()" class="text-gray-400 hover:text-gray-700">✕</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">Project URL</label>
+          <input type="text" id="cfgUrl" dir="ltr" class="w-full px-3.5 py-2 text-sm font-mono bg-gray-50 border border-gray-200 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">Publishable / Anon Key</label>
+          <input type="password" id="cfgKey" dir="ltr" class="w-full px-3.5 py-2 text-sm font-mono bg-gray-50 border border-gray-200 rounded-xl" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100">إلغاء</button>
+        <button onclick="saveSupabaseConfig()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">💾 حفظ واتصال</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2.5"></div>
 
   <script>
     const DEFAULT_SUPABASE_URL = 'https://wbpotzyvvdirytnugzlb.supabase.co';
     const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_t1_zYtk_-EoGnWF--nx9vg_zkQxXsxA';
 
-    let sbClient = window.supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_ANON_KEY);
+    let sbClient = null;
+    let realtimeChannel = null;
     let allPayments = [];
     let currentFilter = 'all';
     let lastAddedId = null;
+    let primaryWalletNumber = '';
+
+    function getCredentials() {
+      return {
+        url: (localStorage.getItem('SB_URL') || DEFAULT_SUPABASE_URL).trim(),
+        key: (localStorage.getItem('SB_KEY') || DEFAULT_SUPABASE_ANON_KEY).trim(),
+      };
+    }
+
+    function toggleSidebar(open) {
+      const sb = document.getElementById('sidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      sb.classList.toggle('translate-x-full', !open);
+      bd.classList.toggle('hidden', !open);
+    }
 
     function parseVodafoneCashSms(raw) {
       if (!raw || typeof raw !== 'string') return {};
@@ -271,12 +325,14 @@
       const senderNameMatch = raw.match(/المسجل ب[إا]سم\s+(.+?)\s+على رقم محفظتك/);
       const walletPhoneMatch = raw.match(/على رقم محفظتك\s*(01[0-9]{9})/);
       const txIdMatch = raw.match(/رقم العملية\s*:\s*(\d+)/);
+      const balanceMatch = raw.match(/رصيد(?:ك| حسابك في فودافون كاش) الحالي\s*:?\s*([\d.]+)\s*جنيه/);
       return {
         amount: amountMatch ? parseFloat(amountMatch[1]) : null,
         sender_phone: senderPhoneMatch ? senderPhoneMatch[1] : null,
         sender_name: senderNameMatch ? senderNameMatch[1].trim() : null,
         wallet_phone: walletPhoneMatch ? walletPhoneMatch[1] : null,
         transaction_id: txIdMatch ? txIdMatch[1] : null,
+        wallet_balance: balanceMatch ? parseFloat(balanceMatch[1]) : null,
       };
     }
 
@@ -285,13 +341,13 @@
       const hasValidTransfer = parsed.amount !== null && parsed.sender_phone && parsed.transaction_id;
       row._sender_name = row.sender_name || parsed.sender_name || null;
       row._wallet_phone = row.wallet_phone || parsed.wallet_phone || null;
+      row._wallet_balance = parsed.wallet_balance || null;
 
       if (hasValidTransfer && (row.status === 'error' || !row.sender_phone || !row.transaction_id || row.amount === null)) {
         row.amount = parsed.amount;
         row.sender_phone = parsed.sender_phone;
         row.transaction_id = parsed.transaction_id;
         if (row.status === 'error') row.status = 'unlinked';
-
         if (sbClient && row.id) {
           await sbClient.from('incoming_payments').update({
             amount: parsed.amount,
@@ -306,9 +362,17 @@
       return row;
     }
 
+    async function initSupabase() {
+      const { url, key } = getCredentials();
+      sbClient = window.supabase.createClient(url, key);
+      await loadPayments();
+      subscribeRealtime();
+    }
+
     async function loadPayments() {
+      if (!sbClient) return;
       const { data, error } = await sbClient.from('incoming_payments').select('*').order('created_at', { ascending: false }).limit(500);
-      if (error) return showToast('❌ خطأ', error.message, true);
+      if (error) return showToast('خطأ في جلب البيانات', error.message, true);
       const rows = data || [];
       for (const r of rows) await enrichAndHealRow(r);
       allPayments = rows;
@@ -316,7 +380,10 @@
     }
 
     function subscribeRealtime() {
-      sbClient.channel('incoming-payments-live')
+      if (!sbClient) return;
+      if (realtimeChannel) sbClient.removeChannel(realtimeChannel);
+      realtimeChannel = sbClient
+        .channel('incoming-payments-pastel')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'incoming_payments' }, async (payload) => {
           if (payload.eventType === 'INSERT') {
             const newRow = await enrichAndHealRow(payload.new);
@@ -325,7 +392,7 @@
               lastAddedId = newRow.id;
               updateDashboard();
               if (newRow.status !== 'error') {
-                showToast(`💸 تحويل جديد: ${Number(newRow.amount).toFixed(2)} ج.م`, `من: ${newRow.sender_phone} إلى محفظة: ${newRow._wallet_phone || '—'}`);
+                showToast(`تحويل جديد: ${Number(newRow.amount).toFixed(2)} ج.م`, `من: ${newRow.sender_phone} إلى محفظتنا: ${newRow._wallet_phone || '—'}`);
               }
             }
           } else if (payload.eventType === 'UPDATE') {
@@ -338,150 +405,99 @@
           }
         })
         .subscribe((status) => {
-          const badge = document.getElementById('connBadge');
           const ok = status === 'SUBSCRIBED';
-          badge.classList.toggle('disconnected', !ok);
-          document.getElementById('connText').textContent = ok ? 'متصل لحظياً (Supabase Realtime)' : 'انقطع الاتصال';
+          document.getElementById('connText').textContent = ok ? 'متصل لحظياً' : 'انقطع الاتصال';
         });
     }
 
     function updateDashboard() {
       let totalAmount = 0, validCount = 0, unlinkedCount = 0, unlinkedAmount = 0, linkedCount = 0, linkedAmount = 0, errorCount = 0;
+      const walletTotals = {};
+      const devicesSet = new Set();
+      let latestBalance = null;
+
       for (const p of allPayments) {
+        if (p.device_id) devicesSet.add(p.device_id);
+        if (latestBalance === null && p._wallet_balance !== null) latestBalance = p._wallet_balance;
         const amt = p.amount !== null ? parseFloat(p.amount) : 0;
-        if (p.status !== 'error' && p.amount !== null) { totalAmount += amt; validCount++; }
+        if (p.status !== 'error' && p.amount !== null) {
+          totalAmount += amt;
+          validCount++;
+          const w = p._wallet_phone || 'غير محدد';
+          if (!walletTotals[w]) walletTotals[w] = { count: 0, total: 0 };
+          walletTotals[w].count++;
+          walletTotals[w].total += amt;
+        }
         if (p.status === 'unlinked') { unlinkedCount++; unlinkedAmount += amt; }
         else if (p.status === 'linked') { linkedCount++; linkedAmount += amt; }
         else if (p.status === 'error') { errorCount++; }
       }
-      document.getElementById('kpiTotalAmount').textContent = `${totalAmount.toFixed(2)} ج.م`;
-      document.getElementById('kpiTotalCount').textContent = `إجمالي ${validCount} عملية تحويل صحيحة`;
-      document.getElementById('kpiUnlinkedCount').textContent = unlinkedCount;
-      document.getElementById('kpiUnlinkedAmount').textContent = `بقيمة ${unlinkedAmount.toFixed(2)} ج.م`;
-      document.getElementById('kpiLinkedCount').textContent = linkedCount;
-      document.getElementById('kpiLinkedAmount').textContent = `بقيمة ${linkedAmount.toFixed(2)} ج.م`;
-      document.getElementById('kpiErrorCount').textContent = errorCount;
-      document.getElementById('tabCountAll').textContent = allPayments.length;
-      document.getElementById('tabCountUnlinked').textContent = unlinkedCount;
-      document.getElementById('tabCountLinked').textContent = linkedCount;
-      document.getElementById('tabCountError').textContent = errorCount;
-      renderTable();
-    }
 
-    function setFilter(f) {
-      currentFilter = f;
-      document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.toggle('active', btn.dataset.filter === f));
-      renderTable();
-    }
+      const unlinkedPct = validCount > 0 ? Math.round((unlinkedCount / validCount) * 100) : 0;
+      const linkedPct = validCount > 0 ? Math.round((linkedCount / validCount) * 100) : 0;
 
-    function renderTable() {
-      const tbody = document.getElementById('paymentsTableBody');
-      const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const filtered = allPayments.filter((p) => {
-        if (currentFilter !== 'all' && p.status !== currentFilter) return false;
-        if (!q) return true;
-        return (
-          (p.sender_phone && p.sender_phone.toLowerCase().includes(q)) ||
-          (p._sender_name && p._sender_name.toLowerCase().includes(q)) ||
-          (p._wallet_phone && p._wallet_phone.toLowerCase().includes(q)) ||
-          (p.transaction_id && p.transaction_id.toLowerCase().includes(q)) ||
-          (p.device_id && p.device_id.toLowerCase().includes(q)) ||
-          (p.raw_message && p.raw_message.toLowerCase().includes(q)) ||
-          String(p.amount || '').includes(q)
-        );
+      document.getElementById('kpiTotalAmount').textContent = `${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
+      document.getElementById('kpiTotalBadge').textContent = `${validCount} عملية صحيحة`;
+      document.getElementById('kpiUnlinkedCount').textContent = `${unlinkedCount} تحويل`;
+      document.getElementById('kpiUnlinkedAmount').textContent = `بقيمة ${unlinkedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
+      document.getElementById('kpiUnlinkedBar').style.width = `${unlinkedPct}%`;
+      document.getElementById('kpiUnlinkedPct').textContent = `${unlinkedPct}%`;
+      document.getElementById('kpiLinkedCount').textContent = `${linkedCount} تحويل`;
+      document.getElementById('kpiLinkedAmount').textContent = `بقيمة ${linkedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
+      document.getElementById('kpiLinkedBar').style.width = `${linkedPct}%`;
+      document.getElementById('kpiLinkedPct').textContent = `${linkedPct}%`;
+      document.getElementById('kpiErrorBadge').textContent = `${errorCount} رسائل أخرى`;
+      document.getElementById('kpiDevicesCount').textContent = `الأجهزة النشطة: ${devicesSet.size || 1}`;
+
+      const walletKeys = Object.keys(walletTotals).filter((k) => k !== 'غير محدد');
+      primaryWalletNumber = walletKeys[0] || '01061392304';
+      document.getElementById('kpiPrimaryWallet').textContent = primaryWalletNumber;
+      document.getElementById('latestWalletBalance').textContent = latestBalance !== null ? `${latestBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م` : '—';
+
+      ['All', 'Unlinked', 'Linked', 'Error'].forEach((k) => {
+        const val = k === 'All' ? allPayments.length : k === 'Unlinked' ? unlinkedCount : k === 'Linked' ? linkedCount : errorCount;
+        document.getElementById(`tabCount${k}`).textContent = val;
+        document.getElementById(`sideCount${k}`).textContent = val;
       });
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><h3>📭 لا توجد تحويلات مطابقة للعرض حالياً</h3></div></td></tr>`;
+      renderWalletsSummary(walletTotals);
+      renderChart();
+      renderTable();
+      lucide.createIcons();
+    }
+
+    function renderWalletsSummary(walletTotals) {
+      const container = document.getElementById('walletsSummaryList');
+      const entries = Object.entries(walletTotals);
+      if (entries.length === 0) {
+        container.innerHTML = `<div class="p-4 rounded-xl bg-gray-50 text-xs text-gray-400 text-center">لا توجد محافظ مسجلة بعد</div>`;
         return;
       }
-
-      tbody.innerHTML = filtered.map((p) => {
-        const isNew = p.id === lastAddedId;
-        const amountHtml = p.amount !== null
-          ? `<span class="amount-badge mono">${Number(p.amount).toFixed(2)}</span> <small>ج.م</small>`
-          : `<span style="color:var(--rose);font-size:0.8rem;">غير مستخرج</span>`;
-
-        const senderPhoneHtml = p.sender_phone
-          ? `<div>
-               <span class="copy-chip sender-chip mono" onclick="copyText('${p.sender_phone}', 'رقم المحول منه')">📲 ${p.sender_phone} 📋</span>
-               ${p._sender_name ? `<span class="sender-name-sub">👤 ${escapeHtml(p._sender_name)}</span>` : ''}
-             </div>`
-          : '—';
-
-        const walletPhoneHtml = p._wallet_phone
-          ? `<span class="copy-chip wallet-chip mono" onclick="copyText('${p._wallet_phone}', 'رقم محفظتنا')">🏦 ${p._wallet_phone} 📋</span>`
-          : '—';
-
-        const txHtml = p.transaction_id
-          ? `<span class="copy-chip tx-chip mono" onclick="copyText('${p.transaction_id}', 'رقم العملية')">#${p.transaction_id} 📋</span>`
-          : '—';
-
-        const deviceHtml = p.device_id ? `<span class="device-tag">📱 ${escapeHtml(p.device_id)}</span>` : '—';
-        const statusBadge = p.status === 'unlinked'
-          ? `<span class="status-pill status-unlinked">⏳ غير مربوط</span>`
-          : p.status === 'linked'
-          ? `<span class="status-pill status-linked">✅ تم الربط</span>`
-          : `<span class="status-pill status-error">⚠️ غير تحويل</span>`;
-
-        const dateStr = p.created_at ? new Date(p.created_at).toLocaleString('ar-EG') : '—';
-        const toggleBtn = p.status === 'linked'
-          ? `<button class="action-btn" onclick="quickToggleStatus(${p.id}, 'unlinked')">إلغاء الربط</button>`
-          : `<button class="action-btn link-btn" onclick="quickToggleStatus(${p.id}, 'linked')">✓ ربط التحويل</button>`;
-
-        return `
-          <tr class="${isNew ? 'new-row-flash' : ''}">
-            <td class="mono">#${p.id}</td>
-            <td>${amountHtml}</td>
-            <td>${senderPhoneHtml}</td>
-            <td>${walletPhoneHtml}</td>
-            <td>${txHtml}</td>
-            <td>${deviceHtml}</td>
-            <td><div class="raw-msg">${escapeHtml(p.raw_message || '')}</div></td>
-            <td>${statusBadge}</td>
-            <td style="font-size:0.8rem;color:var(--text-secondary);white-space:nowrap;">${dateStr}</td>
-            <td>
-              <div class="row-actions">
-                ${p.status !== 'error' ? toggleBtn : ''}
-                <button class="action-btn" onclick="deletePayment(${p.id})">🗑</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      container.innerHTML = entries.map(([wallet, info]) => `
+        <div onclick="copyText('${wallet}', 'رقم محفظتنا')" class="cursor-pointer flex items-center justify-between p-3.5 rounded-xl bg-gray-50/80 border border-gray-100 hover:bg-sky-50/50 hover:border-sky-200 transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-sky-100/80 text-sky-700 font-bold text-xs flex items-center justify-center">🏦</div>
+            <div>
+              <h4 class="text-sm font-extrabold text-gray-800 font-mono" dir="ltr">${wallet}</h4>
+              <p class="text-[11px] text-gray-400">اضغط لنسخ رقم المحفظة • ${info.count} تحويلات</p>
+            </div>
+          </div>
+          <p class="text-sm font-extrabold text-emerald-700">${info.total.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م</p>
+        </div>
+      `).join('');
     }
 
-    async function quickToggleStatus(id, status) {
-      await sbClient.from('incoming_payments').update({ status }).eq('id', id);
-      loadPayments();
-    }
+    function renderChart() {
+      const svg = document.getElementById('chartSvg');
+      const labelsDiv = document.getElementById('chartLabels');
+      const valid = allPayments.filter((p) => p.status !== 'error' && p.amount !== null).slice(0, 7).reverse();
+      const pointsData = valid.length >= 2 ? valid.map((p) => ({ label: `#${p.id}`, val: parseFloat(p.amount) })) : [{ label: '1', val: 250 }, { label: '2', val: 400 }, { label: '3', val: 400 }];
+      const maxVal = Math.max(...pointsData.map((d) => d.val), 500);
+      const width = 660, startX = 30;
+      const stepX = pointsData.length > 1 ? (width - startX) / (pointsData.length - 1) : 0;
+      const coords = pointsData.map((d, idx) => ({ x: Math.round(startX + idx * stepX), y: Math.round(165 - (d.val / maxVal) * 125), val: d.val, label: d.label }));
 
-    async function deletePayment(id) {
-      if (!confirm(`حذف السجل #${id}؟`)) return;
-      await sbClient.from('incoming_payments').delete().eq('id', id);
-      loadPayments();
-    }
-
-    function copyText(text, label) {
-      navigator.clipboard.writeText(text);
-      showToast('📋 تم النسخ', `${label}: ${text}`);
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
-    function showToast(title, desc, isError = false) {
-      const container = document.getElementById('toastContainer');
-      const t = document.createElement('div');
-      t.className = `toast ${isError ? 'error-toast' : ''}`;
-      t.innerHTML = `<div style="font-weight:800;font-size:0.88rem;">${escapeHtml(title)}</div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(desc)}</div>`;
-      container.appendChild(t);
-      setTimeout(() => t.remove(), 4000);
-    }
-
-    loadPayments();
-    subscribeRealtime();
-  </script>
-</body>
-</html>
+      let pathD = `M ${coords[0].x} ${coords[0].y}`;
+      for (let i = 1; i < coords.length; i++) {
+        const prev = coords[i - 1], curr = coords[i], midX = (prev.x + curr.x) / 2;
+        pathD += ` C ${midX} ${
