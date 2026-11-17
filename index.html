@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>نبض المدفوعات | نظام رصد التحويلات والمبيعات والمحاسبة</title>
+  <title>بوابة المدفوعات والتحصيل المالي | نظام إدارة ومطابقة التحويلات الإلكترونية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -24,26 +24,28 @@
     body { font-family: 'Cairo', sans-serif; background-color: #F8FAFC; color: #1F2937; }
     @keyframes flashPastel { 0% { background-color: rgba(167, 243, 208, 0.65); } 100% { background-color: transparent; } }
     .new-row-flash { animation: flashPastel 2.8s ease-out; }
+    @keyframes pulseBorder { 0%, 100% { border-color: rgba(244, 63, 94, 0.35); } 50% { border-color: rgba(244, 63, 94, 0.9); } }
+    .offline-card-pulse { animation: pulseBorder 2s infinite; }
   </style>
 </head>
 <body class="min-h-screen bg-[#F8FAFC] text-gray-800 antialiased">
 
   <!-- ======================================================================== -->
-  <!-- 1. شاشة تسجيل الدخول (برقم التليفون وكلمة المرور فقط بدون كتابة الاسم) -->
+  <!-- 1. بوابة تسجيل الدخول الرسمية -->
   <!-- ======================================================================== -->
   <div id="loginScreen" class="fixed inset-0 z-50 bg-[#F8FAFC] flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white rounded-3xl border border-gray-100 shadow-xl p-8">
       <div class="flex flex-col items-center text-center mb-7">
         <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 mb-3 shadow-xs">
-          <i data-lucide="wallet" class="w-7 h-7"></i>
+          <i data-lucide="landmark" class="w-7 h-7"></i>
         </div>
-        <h1 class="text-xl font-extrabold text-gray-900">نبض المدفوعات</h1>
-        <p class="text-xs text-gray-400 mt-1">سجّل الدخول برقم الهاتف وكلمة المرور الخاصة بك</p>
+        <h1 class="text-xl font-extrabold text-gray-900">بوابة المدفوعات والتحصيل المالي</h1>
+        <p class="text-xs text-gray-500 mt-1">يرجى تسجيل الدخول باستخدام رقم الهاتف المعتمد وكلمة المرور</p>
       </div>
 
       <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">رقم التليفون</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1.5">رقم الهاتف المسجل</label>
           <div class="relative">
             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2"></i>
             <input
@@ -58,7 +60,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">كلمة المرور</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1.5">كلمة المرور</label>
           <div class="relative">
             <i data-lucide="lock" class="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2"></i>
             <input
@@ -78,22 +80,22 @@
           type="submit"
           class="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-sm transition-all"
         >
-          تسجيل الدخول
+          تسجيل الدخول إلى النظام
         </button>
       </form>
 
-      <!-- تلميح الحسابات الافتراضية للتجربة السريعة -->
+      <!-- حسابات معتمدة للدخول السريع -->
       <div class="mt-6 pt-5 border-t border-gray-100">
-        <p class="text-[11px] font-bold text-gray-400 mb-2 text-center">حسابات جاهزة للدخول السريع (اضغط للتعبئة):</p>
+        <p class="text-[11px] font-bold text-gray-400 mb-2 text-center">حسابات النظام الافتراضية (اضغط للتعبئة التلقائية):</p>
         <div class="grid grid-cols-3 gap-2 text-center">
           <button type="button" onclick="fillDemoLogin('01000000000', '123456')" class="p-2 rounded-xl bg-indigo-50/70 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold border border-indigo-100 transition-colors">
-            👑 Admin<br/><span class="font-mono text-[10px]">01000000000</span>
+            مدير النظام<br/><span class="font-mono text-[10px]">01000000000</span>
           </button>
           <button type="button" onclick="fillDemoLogin('01011111111', '123456')" class="p-2 rounded-xl bg-emerald-50/70 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-100 transition-colors">
-            💼 Sales<br/><span class="font-mono text-[10px]">01011111111</span>
+            إدارة المبيعات<br/><span class="font-mono text-[10px]">01011111111</span>
           </button>
           <button type="button" onclick="fillDemoLogin('01022222222', '123456')" class="p-2 rounded-xl bg-sky-50/70 hover:bg-sky-100 text-sky-700 text-[11px] font-bold border border-sky-100 transition-colors">
-            📊 Accounting<br/><span class="font-mono text-[10px]">01022222222</span>
+            الإدارة المالية<br/><span class="font-mono text-[10px]">01022222222</span>
           </button>
         </div>
       </div>
@@ -101,23 +103,23 @@
   </div>
 
   <!-- ======================================================================== -->
-  <!-- 2. التطبيق الرئيسي (Main Dashboard) -->
+  <!-- 2. النظام الرئيسي (Main Financial Dashboard) -->
   <!-- ======================================================================== -->
   <div id="appContainer" class="min-h-screen flex hidden">
 
     <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 z-30 bg-gray-900/20 backdrop-blur-xs hidden lg:hidden"></div>
 
-    <!-- القائمة الجانبية (مدمجة لتوفير أكبر مساحة للجدول) -->
-    <aside id="sidebar" class="fixed top-0 right-0 z-40 h-screen w-60 bg-white border-l border-gray-100 shadow-soft transition-all duration-300 translate-x-full lg:static lg:translate-x-0 flex flex-col justify-between shrink-0">
+    <!-- القائمة الجانبية الرسمية -->
+    <aside id="sidebar" class="fixed top-0 right-0 z-40 h-screen w-64 bg-white border-l border-gray-100 shadow-soft transition-all duration-300 translate-x-full lg:static lg:translate-x-0 flex flex-col justify-between shrink-0">
       <div>
         <div class="flex items-center justify-between px-4 py-5 border-b border-gray-50">
           <div class="flex items-center gap-2.5">
             <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100/80">
-              <i data-lucide="wallet" class="w-4 h-4"></i>
+              <i data-lucide="landmark" class="w-4 h-4"></i>
             </div>
             <div>
-              <h1 class="text-sm font-extrabold text-gray-900">نبض المدفوعات</h1>
-              <p class="text-[11px] text-gray-400">رصد التحويلات & التقفيل</p>
+              <h1 class="text-sm font-extrabold text-gray-900">بوابة المدفوعات المالية</h1>
+              <p class="text-[11px] text-gray-400">إدارة التحصيل والتسويات</p>
             </div>
           </div>
           <button onclick="toggleSidebar(false)" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 lg:hidden">
@@ -126,50 +128,59 @@
         </div>
 
         <nav class="p-3 space-y-1">
-          <p class="px-3 pb-1.5 text-[10px] font-bold text-gray-400">فلترة الحالة السريعة</p>
-          <button onclick="setFilter('all'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-50/80 text-indigo-700 transition-all">
-            <div class="flex items-center gap-2.5"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>كل التحويلات</span></div>
+          <p class="px-3 pb-1.5 text-[10px] font-bold text-gray-400">اللوحات الرئيسية</p>
+          <button onclick="switchMainView('payments'); setFilter('all'); toggleSidebar(false);" id="navBtnPayments" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-50/80 text-indigo-700 transition-all">
+            <div class="flex items-center gap-2.5"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>سجل المعاملات المالية</span></div>
             <span id="sideCountAll" class="px-2 py-0.5 text-[11px] rounded-full bg-indigo-100 text-indigo-700 font-bold">0</span>
           </button>
-          <button onclick="setFilter('unlinked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
-            <div class="flex items-center gap-2.5"><i data-lucide="clock" class="w-4 h-4 text-amber-500"></i><span>بانتظار الربط</span></div>
-            <span id="sideCountUnlinked" class="px-2 py-0.5 text-[11px] rounded-full bg-amber-50 text-amber-700 font-bold">0</span>
-          </button>
-          <button onclick="setFilter('linked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
-            <div class="flex items-center gap-2.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i><span>تم ربطها</span></div>
-            <span id="sideCountLinked" class="px-2 py-0.5 text-[11px] rounded-full bg-emerald-50 text-emerald-700 font-bold">0</span>
-          </button>
-          <button onclick="setFilter('error'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
-            <div class="flex items-center gap-2.5"><i data-lucide="message-square-warning" class="w-4 h-4 text-rose-500"></i><span>رسائل أخرى</span></div>
-            <span id="sideCountError" class="px-2 py-0.5 text-[11px] rounded-full bg-rose-50 text-rose-700 font-bold">0</span>
+
+          <button onclick="switchMainView('devices'); toggleSidebar(false);" id="navBtnDevices" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
+            <div class="flex items-center gap-2.5"><i data-lucide="smartphone" class="w-4 h-4 text-indigo-600"></i><span>حالة الهواتف المتصلة</span></div>
+            <span id="sideDevicesBadge" class="px-2 py-0.5 text-[10px] rounded-full bg-emerald-50 text-emerald-700 font-bold">0 جهاز</span>
           </button>
 
-          <!-- قسم الإدارة (يظهر للأدمن فقط) -->
+          <div class="pt-3 mt-2 border-t border-gray-100 space-y-1">
+            <p class="px-3 pb-1.5 text-[10px] font-bold text-gray-400">تصنيف المعاملات المالية</p>
+            <button onclick="switchMainView('payments'); setFilter('unlinked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
+              <div class="flex items-center gap-2.5"><i data-lucide="clock" class="w-4 h-4 text-amber-500"></i><span>قيد المراجعة والمطابقة</span></div>
+              <span id="sideCountUnlinked" class="px-2 py-0.5 text-[11px] rounded-full bg-amber-50 text-amber-700 font-bold">0</span>
+            </button>
+            <button onclick="switchMainView('payments'); setFilter('linked'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
+              <div class="flex items-center gap-2.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i><span>معاملات معتمدة ومربوطة</span></div>
+              <span id="sideCountLinked" class="px-2 py-0.5 text-[11px] rounded-full bg-emerald-50 text-emerald-700 font-bold">0</span>
+            </button>
+            <button onclick="switchMainView('payments'); setFilter('error'); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
+              <div class="flex items-center gap-2.5"><i data-lucide="message-square-warning" class="w-4 h-4 text-rose-500"></i><span>إشعارات غير مالية</span></div>
+              <span id="sideCountError" class="px-2 py-0.5 text-[11px] rounded-full bg-rose-50 text-rose-700 font-bold">0</span>
+            </button>
+          </div>
+
+          <!-- قسم الإدارة (يظهر لمدير النظام فقط) -->
           <div id="adminNavSection" class="pt-3 mt-3 border-t border-gray-100 space-y-1 hidden">
-            <p class="px-3 pb-1 text-[10px] font-bold text-gray-400">إدارة النظام (Admin)</p>
+            <p class="px-3 pb-1 text-[10px] font-bold text-gray-400">إدارة النظام والصلاحيات</p>
             <button onclick="openUsersModal(); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-violet-700 bg-violet-50/60 hover:bg-violet-100/70 transition-all">
-              <div class="flex items-center gap-2.5"><i data-lucide="users" class="w-4 h-4 text-violet-600"></i><span>إدارة المستخدمين والرول</span></div>
+              <div class="flex items-center gap-2.5"><i data-lucide="users" class="w-4 h-4 text-violet-600"></i><span>إدارة المستخدمين والأدوار</span></div>
             </button>
             <button onclick="openConfigModal(); toggleSidebar(false);" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all">
-              <div class="flex items-center gap-2.5"><i data-lucide="settings" class="w-4 h-4 text-gray-400"></i><span>إعدادات Supabase</span></div>
+              <div class="flex items-center gap-2.5"><i data-lucide="settings" class="w-4 h-4 text-gray-400"></i><span>إعدادات الربط السحابي</span></div>
             </button>
           </div>
         </nav>
       </div>
 
-      <!-- معلومات المستخدم الحالي وزر تسجيل الخروج -->
+      <!-- بيانات المستخدم المسجل وزر الخروج -->
       <div class="p-3 border-t border-gray-100 space-y-2.5">
         <div class="p-3 rounded-2xl bg-gray-50 border border-gray-100">
           <div class="flex items-center justify-between mb-1">
             <span id="sidebarUserName" class="text-xs font-extrabold text-gray-900">—</span>
-            <span id="sidebarUserRoleBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700">Admin</span>
+            <span id="sidebarUserRoleBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700">مدير النظام</span>
           </div>
           <p id="sidebarUserPhone" class="text-[11px] text-gray-400 font-mono" dir="ltr">—</p>
         </div>
 
         <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 bg-rose-50/60 hover:bg-rose-100/70 transition-colors">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          <span>تسجيل الخروج</span>
+          <span>تسجيل الخروج من النظام</span>
         </button>
       </div>
     </aside>
@@ -184,278 +195,434 @@
             <button onclick="toggleSidebar(true)" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 lg:hidden">
               <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <button onclick="toggleDesktopSidebar()" class="hidden lg:inline-flex p-2 rounded-xl text-gray-500 hover:bg-gray-100 border border-gray-100" title="توسيع / طي القائمة الجانبية">
+            <button onclick="toggleDesktopSidebar()" class="hidden lg:inline-flex p-2 rounded-xl text-gray-500 hover:bg-gray-100 border border-gray-100" title="إظهار / إخفاء القائمة الجانبية">
               <i data-lucide="panel-right" class="w-4 h-4"></i>
             </button>
             <div>
               <div class="flex items-center gap-2">
-                <h2 id="headerWelcomeName" class="text-base lg:text-lg font-extrabold text-gray-900">مرحباً 👋</h2>
-                <span id="headerRoleBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Admin</span>
+                <h2 id="headerWelcomeName" class="text-base lg:text-lg font-extrabold text-gray-900">مرحباً بك</h2>
+                <span id="headerRoleBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">مدير النظام</span>
               </div>
-              <p class="text-[11px] text-gray-400">لوحة رصد ومطابقة تحويلات المحافظ الإلكترونية</p>
+              <p class="text-[11px] text-gray-400">المنصة المركزية لمتابعة ومطابقة التحويلات المالية الفورية ومراقبة أجهزة الاستقبال</p>
             </div>
           </div>
 
           <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- زر سريع للانتقال للوحة مراقبة الهواتف -->
+            <button onclick="switchMainView(currentMainView === 'devices' ? 'payments' : 'devices')" id="headerDevicesBtn" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-all">
+              <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+              <span id="headerDevicesBtnText">لوحة مراقبة الهواتف</span>
+              <span id="headerDevicesCountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-white text-indigo-700 font-extrabold">0</span>
+            </button>
+
             <div id="connBadge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50/80 text-emerald-700 border border-emerald-100">
               <span id="connDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="connText">متصل لحظياً</span>
+              <span id="connText">متصل بالخادم الفوري</span>
             </div>
 
             <button onclick="openUsersModal()" id="headerUsersBtn" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 transition-colors">
               <i data-lucide="users" class="w-3.5 h-3.5"></i>
-              <span>المستخدمين</span>
+              <span>إدارة المستخدمين</span>
             </button>
 
-            <button onclick="exportFilteredCsv()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors" title="تصدير الجدول الحالي لملف Excel CSV">
+            <button onclick="exportFilteredCsv()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors" title="تصدير السجلات المعروضة إلى ملف CSV">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>
-              <span>تصدير CSV</span>
+              <span>تصدير التقرير (CSV)</span>
             </button>
 
-            <button onclick="loadPayments()" class="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-100 transition-colors" title="تحديث البيانات">
+            <button onclick="loadPayments()" class="p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-100 transition-colors" title="تحديث السجلات وحالة الهواتف">
               <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
 
             <button onclick="openSimModal()" id="headerSimBtn" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-all">
               <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-              <span>تجربة رسالة</span>
+              <span>محاكاة إشعار دفع</span>
             </button>
           </div>
         </div>
       </header>
 
-      <!-- المحتوى الداخلي بعرض كامل بدون قيود -->
+      <!-- المحتوى الداخلي بعرض الشاشة الكامل -->
       <main class="flex-1 p-4 lg:p-6 w-full space-y-5">
 
-        <!-- أ) بطاقات المؤشرات العلوية بألوان الباستيل -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <div class="rounded-2xl p-4 border bg-emerald-50/55 border-emerald-100/80 shadow-soft">
-            <div class="flex items-center justify-between mb-2">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-emerald-100/80 text-emerald-700"><i data-lucide="banknote" class="w-4 h-4"></i></div>
-              <span id="kpiTotalBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100/90 text-emerald-800">0 عملية صحيحة</span>
+        <!-- ================================================================== -->
+        <!-- شريط التنبيه الذكي عند انقطاع الإنترنت عن أي هاتف مسجل -->
+        <!-- ================================================================== -->
+        <div id="offlineAlertBanner" class="hidden rounded-2xl bg-rose-50 border border-rose-200 p-4 shadow-soft">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                <i data-lucide="wifi-off" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping"></span>
+                  <h4 class="text-xs sm:text-sm font-extrabold text-rose-900" id="offlineAlertTitle">تنبيه: يوجد هاتف استقبال غير متصل بالإنترنت أو متوقف عن الإرسال</h4>
+                </div>
+                <p class="text-xs text-rose-700 mt-0.5" id="offlineAlertDesc">يرجى مراجعة اتصال الإنترنت وتطبيق الرصد على الهواتف التالية فوراً لضمان وصول التحويلات.</p>
+              </div>
             </div>
-            <p class="text-xs font-semibold text-gray-500">إجمالي التحويلات (حسب الفلتر)</p>
-            <h3 id="kpiTotalAmount" class="text-xl font-extrabold text-gray-900 mt-1">0.00 ج.م</h3>
-          </div>
-
-          <div class="rounded-2xl p-4 border bg-amber-50/55 border-amber-100/80 shadow-soft">
-            <div class="flex items-center justify-between mb-2">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-100/80 text-amber-700"><i data-lucide="clock" class="w-4 h-4"></i></div>
-              <span id="kpiUnlinkedAmount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100/90 text-amber-800">0.00 ج.م</span>
-            </div>
-            <p class="text-xs font-semibold text-gray-500">تحويلات غير مربوطة (Unlinked)</p>
-            <h3 id="kpiUnlinkedCount" class="text-xl font-extrabold text-gray-900 mt-1">0 تحويل</h3>
-          </div>
-
-          <div class="rounded-2xl p-4 border bg-sky-50/55 border-sky-100/80 shadow-soft">
-            <div class="flex items-center justify-between mb-2">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-sky-100/80 text-sky-700"><i data-lucide="check-check" class="w-4 h-4"></i></div>
-              <span id="kpiLinkedAmount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-100/90 text-sky-800">0.00 ج.م</span>
-            </div>
-            <p class="text-xs font-semibold text-gray-500">تحويلات تم ربطها (Linked)</p>
-            <h3 id="kpiLinkedCount" class="text-xl font-extrabold text-gray-900 mt-1">0 تحويل</h3>
-          </div>
-
-          <div class="rounded-2xl p-4 border bg-violet-50/55 border-violet-100/80 shadow-soft">
-            <div class="flex items-center justify-between mb-2">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-violet-100/80 text-violet-700"><i data-lucide="landmark" class="w-4 h-4"></i></div>
-              <button onclick="copyPrimaryWallet()" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-violet-100/90 text-violet-800 hover:bg-violet-200 transition-colors">نسخ المحفظة 📋</button>
-            </div>
-            <p class="text-xs font-semibold text-gray-500">محفظتنا الأساسية وآخر رصيد ظاهر</p>
-            <div class="flex items-baseline justify-between mt-1">
-              <h3 id="kpiPrimaryWallet" class="text-base font-extrabold text-gray-900 font-mono" dir="ltr">01061392304</h3>
-              <span id="latestWalletBalance" class="text-xs font-extrabold text-emerald-700 font-mono" dir="ltr">—</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- ب) شريط الفلاتر المتقدمة المخصص (رقم المحول منه، المحفظة، رقم العملية، المبلغ، وتاريخ التحويل) -->
-        <section class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <div class="flex items-center gap-2">
-              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-indigo-600"></i>
-              <h3 class="text-xs font-extrabold text-gray-800">فلاتر البحث المتقدمة</h3>
-              <span id="filteredSummaryBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700"></span>
-            </div>
-
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <button onclick="setQuickDate('today')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">تحويلات اليوم</button>
-              <button onclick="setQuickDate('yesterday')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">أمس</button>
-              <button onclick="setQuickDate('week')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">آخر 7 أيام</button>
-              <button onclick="resetAllFilters()" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-100 transition-colors">↺ مسح كل الفلاتر</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <!-- 1. فلتر رقم المحول منه أو اسمه -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">📲 رقم المحول منه / الاسم</label>
-              <input
-                type="text"
-                id="filterSender"
-                oninput="onFilterChange()"
-                placeholder="مثال: 01001167489 أو الاسم"
-                class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
-              />
-            </div>
-
-            <!-- 2. فلتر المحفظة المستلمة -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">🏦 رقم محفظتنا المستلمة</label>
-              <select
-                id="filterWallet"
-                onchange="onFilterChange()"
-                class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400 font-mono"
-              >
-                <option value="">كل المحافظ</option>
-              </select>
-            </div>
-
-            <!-- 3. فلتر رقم العملية -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1"># رقم العملية</label>
-              <input
-                type="text"
-                id="filterTxId"
-                oninput="onFilterChange()"
-                placeholder="مثال: 025774167110"
-                class="w-full px-3 py-2 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
-              />
-            </div>
-
-            <!-- 4. فلتر المبلغ (الفلوس) -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">💰 المبلغ (ج.م)</label>
-              <input
-                type="number"
-                step="any"
-                id="filterAmount"
-                oninput="onFilterChange()"
-                placeholder="مثال: 400 أو 800"
-                class="w-full px-3 py-2 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
-              />
-            </div>
-
-            <!-- 5. من تاريخ -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">📅 من تاريخ</label>
-              <input
-                type="date"
-                id="filterDateFrom"
-                onchange="onFilterChange()"
-                class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
-              />
-            </div>
-
-            <!-- 6. إلى تاريخ -->
-            <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1">📅 إلى تاريخ</label>
-              <input
-                type="date"
-                id="filterDateTo"
-                onchange="onFilterChange()"
-                class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
-              />
-            </div>
-          </div>
-        </section>
-
-        <!-- ج) جدول التحويلات بعرض الشاشة الكامل + نظام البيدجات (Pagination) -->
-        <section class="bg-white rounded-2xl border border-gray-100 shadow-soft overflow-hidden w-full">
-
-          <!-- شريط التحكم العلوي للجدول (تبويبات الحالة + الترتيب + البيدجات العلوية) -->
-          <div class="p-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <button onclick="setFilter('all')" data-tab="all" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60 transition-all">الكل (<span id="tabCountAll">0</span>)</button>
-              <button onclick="setFilter('unlinked')" data-tab="unlinked" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">⏳ غير مربوط (<span id="tabCountUnlinked">0</span>)</button>
-              <button onclick="setFilter('linked')" data-tab="linked" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">✅ تم الربط (<span id="tabCountLinked">0</span>)</button>
-              <button onclick="setFilter('error')" data-tab="error" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">⚠️ رسائل أخرى (<span id="tabCountError">0</span>)</button>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2">
-              <!-- زر عكس الترتيب للوصول لأول تحويل بضغطة واحدة -->
-              <button onclick="toggleSortOrder()" id="sortOrderBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 border border-gray-200 transition-colors">
-                <span>الأحدث أولاً ⬇</span>
+              <button onclick="switchMainView('devices')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition-colors">
+                فحص حالة الهواتف الآن
               </button>
-
-              <!-- اختيار عدد الصفوف في الصفحة -->
-              <select id="pageSizeSelect" onchange="onPageSizeChange()" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 border border-gray-200 text-gray-700 focus:outline-none">
-                <option value="15">15 صف / صفحة</option>
-                <option value="25" selected>25 صف / صفحة</option>
-                <option value="50">50 صف / صفحة</option>
-                <option value="100">100 صف / صفحة</option>
-              </select>
-
-              <!-- أزرار البيدجات العلوية -->
-              <div id="topPagination" class="flex items-center gap-1"></div>
             </div>
           </div>
+        </div>
 
-          <!-- الجدول الموسع -->
-          <div class="w-full overflow-x-auto">
-            <table class="w-full text-right border-collapse">
-              <thead>
-                <tr class="bg-gray-50/80 text-gray-600 text-xs font-extrabold border-b border-gray-100">
-                  <th class="py-3 px-3 whitespace-nowrap">#</th>
-                  <th class="py-3 px-3 whitespace-nowrap">المبلغ</th>
-                  <th class="py-3 px-3 whitespace-nowrap">رقم المحول منه (والاسم)</th>
-                  <th class="py-3 px-3 whitespace-nowrap">رقم محفظتنا</th>
-                  <th class="py-3 px-3 whitespace-nowrap">رقم العملية</th>
-                  <th class="py-3 px-3 whitespace-nowrap">وقت وتاريخ التحويل</th>
-                  <th class="py-3 px-3 whitespace-nowrap">الجهاز</th>
-                  <th class="py-3 px-3">نص الرسالة الخام</th>
-                  <th class="py-3 px-3 whitespace-nowrap">الحالة</th>
-                  <th class="py-3 px-3 whitespace-nowrap">إجراءات</th>
-                </tr>
-              </thead>
-              <tbody id="paymentsTableBody" class="divide-y divide-gray-100 text-xs lg:text-sm"></tbody>
-            </table>
-          </div>
+        <!-- ================================================================== -->
+        <!-- القسم الأول: لوحة مراقبة الهواتف المتصلة (Devices Status View) -->
+        <!-- ================================================================== -->
+        <div id="devicesViewContainer" class="hidden space-y-5">
+          <!-- رأس لوحة مراقبة الهواتف -->
+          <section class="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="smartphone" class="w-5 h-5 text-indigo-600"></i>
+                  <h3 class="text-base font-extrabold text-gray-900">لوحة مراقبة الهواتف وأجهزة الاستقبال المسجلة</h3>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">متابعة حية لحالة اتصال كل هاتف بالإنترنت، آخر إشارة اتصال، وآخر عملية تحويل مستلمة لتفادي توقف الرصد</p>
+              </div>
 
-          <!-- شريط البيدجات السفلي (Bottom Pagination) -->
-          <div class="p-4 bg-gray-50/50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
-            <div id="paginationInfo" class="text-xs font-semibold text-gray-500"></div>
-            <div id="bottomPagination" class="flex flex-wrap items-center gap-1"></div>
-          </div>
-        </section>
+              <div class="flex flex-wrap items-center gap-2.5">
+                <!-- إعداد المهلة الزمنية لاعتبار الهاتف مفصولاً -->
+                <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-200">
+                  <label class="text-xs font-bold text-gray-600">تنبيه الانقطاع بعد:</label>
+                  <select id="offlineThresholdSelect" onchange="onChangeOfflineThreshold()" class="bg-white px-2 py-1 rounded-lg text-xs font-bold text-indigo-700 border border-gray-200 focus:outline-none">
+                    <option value="5">5 دقائق (مع نبضات التطبيق)</option>
+                    <option value="15">15 دقيقة</option>
+                    <option value="30">30 دقيقة</option>
+                    <option value="60" selected>ساعة واحدة (60 دقيقة)</option>
+                    <option value="120">ساعتين (120 دقيقة)</option>
+                    <option value="240">4 ساعات</option>
+                  </select>
+                </div>
+
+                <button onclick="toggleSoundAlert()" id="soundAlertBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition-colors">
+                  <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+                  <span id="soundAlertText">التنبيه الصوتي: مفعل</span>
+                </button>
+
+                <button onclick="openAddDeviceModal()" id="addDeviceBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>تسجيل هاتف جديد</span>
+                </button>
+
+                <button onclick="switchMainView('payments')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">
+                  <span>العودة لسجل المعاملات</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ملخص أعداد الهواتف -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5 pt-4 border-t border-gray-100">
+              <div class="p-3.5 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold text-gray-500">إجمالي الهواتف المسجلة</p>
+                  <h4 id="devSummaryTotal" class="text-lg font-extrabold text-gray-900 mt-0.5">0 هاتف</h4>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center"><i data-lucide="smartphones" class="w-5 h-5"></i></div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-100 flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold text-emerald-700">هواتف متصلة ونشطة (Online)</p>
+                  <h4 id="devSummaryOnline" class="text-lg font-extrabold text-emerald-800 mt-0.5">0 هاتف</h4>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><i data-lucide="wifi" class="w-5 h-5"></i></div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-rose-50/60 border border-rose-100 flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold text-rose-700">هواتف مفصولة / تحتاج فحص (Offline)</p>
+                  <h4 id="devSummaryOffline" class="text-lg font-extrabold text-rose-800 mt-0.5">0 هاتف</h4>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center"><i data-lucide="wifi-off" class="w-5 h-5"></i></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- شبكة بطاقات الهواتف المسجلة -->
+          <section id="devicesCardsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></section>
+        </div>
+
+        <!-- ================================================================== -->
+        <!-- القسم الثاني: لوحة المعاملات المالية (Payments View) -->
+        <!-- ================================================================== -->
+        <div id="paymentsViewContainer" class="space-y-5">
+
+          <!-- شريط حالة الهواتف المختصر أعلى المعاملات -->
+          <section class="bg-white rounded-2xl border border-gray-100 shadow-soft px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="text-xs font-extrabold text-gray-700 flex items-center gap-1.5">
+                <i data-lucide="smartphone" class="w-4 h-4 text-indigo-600"></i>
+                <span>حالة هواتف الاستقبال:</span>
+              </span>
+              <div id="miniDevicesStrip" class="flex items-center gap-2 flex-wrap"></div>
+            </div>
+            <button onclick="switchMainView('devices')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1">
+              <span>إدارة ومراقبة كافة الهواتف</span>
+              <span>←</span>
+            </button>
+          </section>
+
+          <!-- أ) بطاقات المؤشرات المالية (Financial KPIs) -->
+          <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="rounded-2xl p-4 border bg-emerald-50/55 border-emerald-100/80 shadow-soft">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-emerald-100/80 text-emerald-700"><i data-lucide="banknote" class="w-4 h-4"></i></div>
+                <span id="kpiTotalBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100/90 text-emerald-800">0 معاملة مالية</span>
+              </div>
+              <p class="text-xs font-semibold text-gray-500">إجمالي المتحصلات المالية</p>
+              <h3 id="kpiTotalAmount" class="text-xl font-extrabold text-gray-900 mt-1">0.00 ج.م</h3>
+            </div>
+
+            <div class="rounded-2xl p-4 border bg-amber-50/55 border-amber-100/80 shadow-soft">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-100/80 text-amber-700"><i data-lucide="clock" class="w-4 h-4"></i></div>
+                <span id="kpiUnlinkedAmount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100/90 text-amber-800">0.00 ج.م</span>
+              </div>
+              <p class="text-xs font-semibold text-gray-500">معاملات قيد المطابقة (Unlinked)</p>
+              <h3 id="kpiUnlinkedCount" class="text-xl font-extrabold text-gray-900 mt-1">0 معاملة</h3>
+            </div>
+
+            <div class="rounded-2xl p-4 border bg-sky-50/55 border-sky-100/80 shadow-soft">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-sky-100/80 text-sky-700"><i data-lucide="check-check" class="w-4 h-4"></i></div>
+                <span id="kpiLinkedAmount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-100/90 text-sky-800">0.00 ج.م</span>
+              </div>
+              <p class="text-xs font-semibold text-gray-500">معاملات معتمدة ومربوطة (Linked)</p>
+              <h3 id="kpiLinkedCount" class="text-xl font-extrabold text-gray-900 mt-1">0 معاملة</h3>
+            </div>
+
+            <div class="rounded-2xl p-4 border bg-violet-50/55 border-violet-100/80 shadow-soft">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-violet-100/80 text-violet-700"><i data-lucide="landmark" class="w-4 h-4"></i></div>
+                <button onclick="copyPrimaryWallet()" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-violet-100/90 text-violet-800 hover:bg-violet-200 transition-colors">نسخ رقم الحساب</button>
+              </div>
+              <p class="text-xs font-semibold text-gray-500">حساب المحفظة الرئيسي والرصيد المتاح</p>
+              <div class="flex items-baseline justify-between mt-1">
+                <h3 id="kpiPrimaryWallet" class="text-base font-extrabold text-gray-900 font-mono" dir="ltr">01061392304</h3>
+                <span id="latestWalletBalance" class="text-xs font-extrabold text-emerald-700 font-mono" dir="ltr">—</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ب) معايير البحث والتصفية المتقدمة -->
+          <section class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-indigo-600"></i>
+                <h3 class="text-xs font-extrabold text-gray-800">معايير البحث والتصفية المتقدمة</h3>
+                <span id="filteredSummaryBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700"></span>
+              </div>
+
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button onclick="setQuickDate('today')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">معاملات اليوم</button>
+                <button onclick="setQuickDate('yesterday')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">معاملات الأمس</button>
+                <button onclick="setQuickDate('week')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 border border-gray-100 transition-colors">آخر 7 أيام</button>
+                <button onclick="resetAllFilters()" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-100 transition-colors">↺ إعادة تعيين الفلاتر</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">رقم هاتف المُحوِّل / اسم العميل</label>
+                <input
+                  type="text"
+                  id="filterSender"
+                  oninput="onFilterChange()"
+                  placeholder="رقم الهاتف أو اسم العميل..."
+                  class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">رقم المحفظة المستقبِلة</label>
+                <select
+                  id="filterWallet"
+                  onchange="onFilterChange()"
+                  class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400 font-mono"
+                >
+                  <option value="">جميع المحافظ المعتمدة</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">الرقم المرجعي للمعاملة</label>
+                <input
+                  type="text"
+                  id="filterTxId"
+                  oninput="onFilterChange()"
+                  placeholder="مثال: 025774167110"
+                  class="w-full px-3 py-2 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">قيمة التحويل (ج.م)</label>
+                <input
+                  type="number"
+                  step="any"
+                  id="filterAmount"
+                  oninput="onFilterChange()"
+                  placeholder="أدخل القيمة المالية..."
+                  class="w-full px-3 py-2 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">تاريخ المعاملة (من)</label>
+                <input
+                  type="date"
+                  id="filterDateFrom"
+                  onchange="onFilterChange()"
+                  class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-1">تاريخ المعاملة (إلى)</label>
+                <input
+                  type="date"
+                  id="filterDateTo"
+                  onchange="onFilterChange()"
+                  class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-400"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- ج) سجل المعاملات المالية والمطابقة اليومية -->
+          <section class="bg-white rounded-2xl border border-gray-100 shadow-soft overflow-hidden w-full">
+
+            <div class="p-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button onclick="setFilter('all')" data-tab="all" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60 transition-all">كافة السجلات (<span id="tabCountAll">0</span>)</button>
+                <button onclick="setFilter('unlinked')" data-tab="unlinked" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">قيد المطابقة (<span id="tabCountUnlinked">0</span>)</button>
+                <button onclick="setFilter('linked')" data-tab="linked" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">معاملات معتمدة (<span id="tabCountLinked">0</span>)</button>
+                <button onclick="setFilter('error')" data-tab="error" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-500 hover:text-gray-800 border border-transparent transition-all">إشعارات غير مالية (<span id="tabCountError">0</span>)</button>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="toggleSortOrder()" id="sortOrderBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 border border-gray-200 transition-colors">
+                  <span>الترتيب: الأحدث أولاً ⬇</span>
+                </button>
+
+                <select id="pageSizeSelect" onchange="onPageSizeChange()" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-gray-50 border border-gray-200 text-gray-700 focus:outline-none">
+                  <option value="15">15 سجل / صفحة</option>
+                  <option value="25" selected>25 سجل / صفحة</option>
+                  <option value="50">50 سجل / صفحة</option>
+                  <option value="100">100 سجل / صفحة</option>
+                </select>
+
+                <div id="topPagination" class="flex items-center gap-1"></div>
+              </div>
+            </div>
+
+            <div class="w-full overflow-x-auto">
+              <table class="w-full text-right border-collapse">
+                <thead>
+                  <tr class="bg-gray-50/80 text-gray-600 text-xs font-extrabold border-b border-gray-100">
+                    <th class="py-3.5 px-3 whitespace-nowrap">رقم السجل</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">قيمة التحويل</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">بيانات المُحوِّل (الهاتف والاسم)</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">المحفظة المستقبِلة</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">الرقم المرجعي للمعاملة</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">تاريخ وتوقيت الاستلام</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">جهاز الاستقبال</th>
+                    <th class="py-3.5 px-3">النص الكامل للإشعار الوارد</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">حالة المطابقة</th>
+                    <th class="py-3.5 px-3 whitespace-nowrap">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsTableBody" class="divide-y divide-gray-100 text-xs lg:text-sm"></tbody>
+              </table>
+            </div>
+
+            <div class="p-4 bg-gray-50/50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              <div id="paginationInfo" class="text-xs font-semibold text-gray-500"></div>
+              <div id="bottomPagination" class="flex flex-wrap items-center gap-1"></div>
+            </div>
+          </section>
+
+        </div>
 
       </main>
     </div>
   </div>
 
   <!-- ======================================================================== -->
-  <!-- 3. نافذة إدارة المستخدمين والصلاحيات (Admin Only) -->
+  <!-- نافذة تسجيل / تعديل هاتف استقبال (Add / Edit Registered Phone) -->
+  <!-- ======================================================================== -->
+  <div id="addDeviceModal" class="fixed inset-0 z-50 bg-gray-900/35 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-md p-6">
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+        <div>
+          <h3 class="text-base font-extrabold text-gray-900">تسجيل بيانات هاتف استقبال</h3>
+          <p class="text-xs text-gray-400">أضف معرف الهاتف ورقم المحفظة المربوطة به لمراقبة اتصاله بالإنترنت</p>
+        </div>
+        <button onclick="closeAddDeviceModal()" class="text-gray-400 hover:text-gray-700 text-lg font-bold">✕</button>
+      </div>
+
+      <form onsubmit="handleSaveDeviceConfig(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">معرف الجهاز في التطبيق (Device ID)</label>
+          <input type="text" id="devCfgId" required dir="ltr" placeholder="Sales_Phone_1" class="w-full px-3.5 py-2.5 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl text-right" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">الاسم التوضيحي للهاتف / الفرع</label>
+          <input type="text" id="devCfgLabel" required placeholder="مثال: هاتف تحصيل المبيعات الرئيسي" class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">رقم محفظة فودافون كاش على هذا الهاتف</label>
+          <input type="text" id="devCfgWallet" required dir="ltr" placeholder="01061392304" class="w-full px-3.5 py-2.5 text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl text-right" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">اسم الموظف المسؤول عن الهاتف</label>
+          <input type="text" id="devCfgOwner" placeholder="مثال: قسم الحسابات / المبيعات" class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl" />
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" onclick="closeAddDeviceModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100">إلغاء</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700">حفظ بيانات الهاتف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================== -->
+  <!-- 3. نافذة إدارة المستخدمين والصلاحيات الوظيفية (Admin Only) -->
   <!-- ======================================================================== -->
   <div id="usersModal" class="fixed inset-0 z-50 bg-gray-900/35 backdrop-blur-xs hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
         <div>
-          <h3 class="text-base font-extrabold text-gray-900">👥 إدارة المستخدمين والصلاحيات (Roles)</h3>
-          <p class="text-xs text-gray-400">كل مستخدم يدخل برقم تليفونه وكلمة المرور فقط، ويظهر اسمه وصلاحيته تلقائياً</p>
+          <h3 class="text-base font-extrabold text-gray-900">إدارة حسابات المستخدمين والصلاحيات الوظيفية</h3>
+          <p class="text-xs text-gray-400">تخصيص بيانات الدخول وتحديد مستوى الصلاحيات لكل موظف على النظام</p>
         </div>
         <button onclick="closeUsersModal()" class="text-gray-400 hover:text-gray-700 text-lg font-bold">✕</button>
       </div>
 
-      <!-- نموذج إضافة مستخدم جديد -->
       <form onsubmit="handleAddUser(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-2.5 bg-gray-50 p-3.5 rounded-2xl border border-gray-100 mb-4">
         <div>
-          <label class="block text-[11px] font-bold text-gray-500 mb-1">اسم الموظف</label>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">الاسم الكامل للموظف</label>
           <input type="text" id="newUserName" required placeholder="مثال: أحمد محمد" class="w-full px-3 py-2 text-xs bg-white border border-gray-200 rounded-xl" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-500 mb-1">رقم التليفون (للدخول)</label>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">رقم الهاتف (معرف الدخول)</label>
           <input type="text" id="newUserPhone" required dir="ltr" placeholder="010xxxxxxxx" class="w-full px-3 py-2 text-xs font-mono bg-white border border-gray-200 rounded-xl text-right" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-500 mb-1">كلمة المرور</label>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">كلمة المرور</label>
           <input type="text" id="newUserPass" required dir="ltr" placeholder="123456" class="w-full px-3 py-2 text-xs font-mono bg-white border border-gray-200 rounded-xl text-right" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-500 mb-1">الصلاحية (Role)</label>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">الدور الوظيفي (Role)</label>
           <select id="newUserRole" class="w-full px-2.5 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl">
-            <option value="sales">💼 Sales (سيلز)</option>
-            <option value="accounting">📊 Accounting (محاسبة)</option>
-            <option value="admin">👑 Admin (أدمن)</option>
+            <option value="sales">إدارة المبيعات (Sales)</option>
+            <option value="accounting">الإدارة المالية (Accounting)</option>
+            <option value="admin">مدير النظام (Admin)</option>
           </select>
         </div>
         <div class="flex items-end">
@@ -465,16 +632,15 @@
         </div>
       </form>
 
-      <!-- قائمة المستخدمين الحاليين -->
       <div class="flex-1 overflow-y-auto">
         <table class="w-full text-right border-collapse text-xs">
           <thead>
-            <tr class="bg-gray-50 text-gray-500 font-bold border-b border-gray-100">
-              <th class="py-2.5 px-3">الاسم</th>
-              <th class="py-2.5 px-3">رقم التليفون</th>
+            <tr class="bg-gray-50 text-gray-600 font-bold border-b border-gray-100">
+              <th class="py-2.5 px-3">اسم الموظف</th>
+              <th class="py-2.5 px-3">رقم الهاتف</th>
               <th class="py-2.5 px-3">كلمة المرور</th>
-              <th class="py-2.5 px-3">الرول (Role)</th>
-              <th class="py-2.5 px-3">إجراء</th>
+              <th class="py-2.5 px-3">الدور الوظيفي</th>
+              <th class="py-2.5 px-3">الإجراء</th>
             </tr>
           </thead>
           <tbody id="usersTableBody" class="divide-y divide-gray-100"></tbody>
@@ -483,50 +649,50 @@
     </div>
   </div>
 
-  <!-- نافذة تجربة إرسال رسالة -->
+  <!-- نافذة محاكاة إشعار دفع -->
   <div id="simModal" class="fixed inset-0 z-50 bg-gray-900/30 backdrop-blur-xs hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-xl w-full max-w-lg p-6">
       <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
-        <h3 class="text-base font-extrabold text-gray-900">⚡ تجربة إرسال رسالة فودافون كاش</h3>
+        <h3 class="text-base font-extrabold text-gray-900">محاكاة استلام إشعار تحويل مالي</h3>
         <button onclick="closeSimModal()" class="text-gray-400 hover:text-gray-700">✕</button>
       </div>
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">معرف الجهاز (Device ID)</label>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">معرف جهاز الاستقبال (Device ID)</label>
           <input type="text" id="simDevice" value="Sales_Phone_1" class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">نص الرسالة (Message)</label>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">النص الكامل للرسالة النصية (SMS)</label>
           <textarea id="simMessage" rows="4" class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl"></textarea>
         </div>
       </div>
       <div class="flex justify-end gap-2 mt-6">
         <button onclick="closeSimModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100">إلغاء</button>
-        <button onclick="sendTestPayment()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700">🚀 إرسال إلى Supabase</button>
+        <button onclick="sendTestPayment()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700">إرسال المعاملة للنظام</button>
       </div>
     </div>
   </div>
 
-  <!-- نافذة إعدادات Supabase -->
+  <!-- نافذة إعدادات الربط السحابي -->
   <div id="configModal" class="fixed inset-0 z-50 bg-gray-900/30 backdrop-blur-xs hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-xl w-full max-w-lg p-6">
       <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
-        <h3 class="text-base font-extrabold text-gray-900">⚙️ إعدادات الاتصال بـ Supabase</h3>
+        <h3 class="text-base font-extrabold text-gray-900">إعدادات الاتصال بقاعدة البيانات السحابية (Supabase)</h3>
         <button onclick="closeConfigModal()" class="text-gray-400 hover:text-gray-700">✕</button>
       </div>
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">Project URL</label>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">رابط المشروع (Project URL)</label>
           <input type="text" id="cfgUrl" dir="ltr" class="w-full px-3.5 py-2 text-sm font-mono bg-gray-50 border border-gray-200 rounded-xl" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-600 mb-1.5">Publishable / Anon Key</label>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">مفتاح الواجهة البرمجية (Publishable Key)</label>
           <input type="password" id="cfgKey" dir="ltr" class="w-full px-3.5 py-2 text-sm font-mono bg-gray-50 border border-gray-200 rounded-xl" />
         </div>
       </div>
       <div class="flex justify-end gap-2 mt-6">
         <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 bg-gray-100">إلغاء</button>
-        <button onclick="saveSupabaseConfig()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">💾 حفظ واتصال</button>
+        <button onclick="saveSupabaseConfig()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">حفظ وتحديث الاتصال</button>
       </div>
     </div>
   </div>
@@ -537,22 +703,39 @@
     const DEFAULT_SUPABASE_URL = 'https://wbpotzyvvdirytnugzlb.supabase.co';
     const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_t1_zYtk_-EoGnWF--nx9vg_zkQxXsxA';
     const SYSTEM_USERS_TX_ID = '__SYSTEM_USERS_CONFIG__';
+    const SYSTEM_DEVICES_TX_ID = '__SYSTEM_DEVICES_CONFIG__';
+    const HEARTBEAT_PREFIX = '__HB__';
 
-    // المستخدمون الافتراضيون (يتم مزامنتهم سحابياً داخل Supabase حتى يعملوا من أي جهاز)
     const DEFAULT_USERS = [
       { phone: '01000000000', password: '123456', name: 'عبد الرحمن', role: 'admin' },
-      { phone: '01011111111', password: '123456', name: 'موظف مبيعات (Sales)', role: 'sales' },
-      { phone: '01022222222', password: '123456', name: 'موظف محاسبة (Accounting)', role: 'accounting' },
+      { phone: '01011111111', password: '123456', name: 'مسؤول المبيعات', role: 'sales' },
+      { phone: '01022222222', password: '123456', name: 'مسؤول الحسابات', role: 'accounting' },
+    ];
+
+    const DEFAULT_REGISTERED_DEVICES = [
+      {
+        device_id: 'Sales_Phone_1',
+        label: 'هاتف تحصيل المبيعات الأساسي (1)',
+        wallet_phone: '01061392304',
+        owner: 'إدارة المبيعات والتحصيل',
+      },
     ];
 
     let sbClient = null;
     let realtimeChannel = null;
     let appUsers = [...DEFAULT_USERS];
+    let registeredDevices = [...DEFAULT_REGISTERED_DEVICES];
+    let deviceHeartbeats = {}; // device_id -> { last_heartbeat_at, battery, network, pending_count }
     let currentUser = null;
+
+    let currentMainView = 'payments'; // 'payments' | 'devices'
+    let offlineThresholdMinutes = Number(localStorage.getItem('OFFLINE_THRESHOLD_MIN') || 60);
+    let soundAlertEnabled = localStorage.getItem('SOUND_ALERT_ENABLED') !== 'false';
+    let lastOfflineAlertedDevices = new Set();
 
     let allPayments = [];
     let currentFilter = 'all';
-    let sortDescending = true; // true = الأحدث أولاً | false = الأقدم أولاً (أول تحويل)
+    let sortDescending = true;
     let currentPage = 1;
     let pageSize = 25;
     let lastAddedId = null;
@@ -565,37 +748,84 @@
       };
     }
 
+    function isSystemRecord(r) {
+      if (!r) return false;
+      if (r.device_id === '__SYSTEM__') return true;
+      if (r.transaction_id === SYSTEM_USERS_TX_ID || r.transaction_id === SYSTEM_DEVICES_TX_ID) return true;
+      if (r.transaction_id && String(r.transaction_id).startsWith(HEARTBEAT_PREFIX)) return true;
+      return false;
+    }
+
     // ============================================================================
-    // 1. إدارة المستخدمين وتسجيل الدخول (Multi-Role Auth synced with Supabase)
+    // 1. إدارة المستخدمين والهواتف المسجلة عبر Supabase
     // ============================================================================
-    async function syncUsersFromSupabase() {
+    async function syncSystemConfigsFromSupabase() {
       if (!sbClient) return;
       try {
         const { data } = await sbClient
           .from('incoming_payments')
           .select('*')
-          .eq('transaction_id', SYSTEM_USERS_TX_ID)
-          .maybeSingle();
+          .or(`transaction_id.eq.${SYSTEM_USERS_TX_ID},transaction_id.eq.${SYSTEM_DEVICES_TX_ID},transaction_id.like.${HEARTBEAT_PREFIX}%`);
 
-        if (data && data.raw_message) {
-          const parsed = JSON.parse(data.raw_message);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            appUsers = parsed;
-            localStorage.setItem('APP_USERS_CACHE', JSON.stringify(appUsers));
-            return;
+        if (Array.isArray(data)) {
+          let foundUsers = false;
+          let foundDevices = false;
+
+          for (const row of data) {
+            if (row.transaction_id === SYSTEM_USERS_TX_ID && row.raw_message) {
+              try {
+                const parsed = JSON.parse(row.raw_message);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  appUsers = parsed;
+                  localStorage.setItem('APP_USERS_CACHE', JSON.stringify(appUsers));
+                  foundUsers = true;
+                }
+              } catch (_) {}
+            } else if (row.transaction_id === SYSTEM_DEVICES_TX_ID && row.raw_message) {
+              try {
+                const parsed = JSON.parse(row.raw_message);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  registeredDevices = parsed;
+                  localStorage.setItem('APP_DEVICES_CACHE', JSON.stringify(registeredDevices));
+                  foundDevices = true;
+                }
+              } catch (_) {}
+            } else if (row.transaction_id && row.transaction_id.startsWith(HEARTBEAT_PREFIX)) {
+              const devId = row.transaction_id.slice(HEARTBEAT_PREFIX.length);
+              try {
+                const hb = JSON.parse(row.raw_message || '{}');
+                deviceHeartbeats[devId] = {
+                  ...hb,
+                  last_heartbeat_at: hb.last_heartbeat_at || row.created_at,
+                };
+              } catch (_) {
+                deviceHeartbeats[devId] = { last_heartbeat_at: row.created_at };
+              }
+            }
           }
-        } else {
-          // إنشاء سجل المستخدمين السحابي لأول مرة
-          await sbClient.from('incoming_payments').insert({
-            transaction_id: SYSTEM_USERS_TX_ID,
-            raw_message: JSON.stringify(DEFAULT_USERS),
-            device_id: '__SYSTEM__',
-            status: 'error',
-          });
+
+          if (!foundUsers) {
+            await sbClient.from('incoming_payments').insert({
+              transaction_id: SYSTEM_USERS_TX_ID,
+              raw_message: JSON.stringify(DEFAULT_USERS),
+              device_id: '__SYSTEM__',
+              status: 'error',
+            });
+          }
+          if (!foundDevices) {
+            await sbClient.from('incoming_payments').insert({
+              transaction_id: SYSTEM_DEVICES_TX_ID,
+              raw_message: JSON.stringify(DEFAULT_REGISTERED_DEVICES),
+              device_id: '__SYSTEM__',
+              status: 'error',
+            });
+          }
         }
       } catch (e) {
-        const cached = localStorage.getItem('APP_USERS_CACHE');
-        if (cached) appUsers = JSON.parse(cached);
+        const cachedU = localStorage.getItem('APP_USERS_CACHE');
+        if (cachedU) appUsers = JSON.parse(cachedU);
+        const cachedD = localStorage.getItem('APP_DEVICES_CACHE');
+        if (cachedD) registeredDevices = JSON.parse(cachedD);
       }
     }
 
@@ -609,10 +839,7 @@
         .maybeSingle();
 
       if (data && data.id) {
-        await sbClient
-          .from('incoming_payments')
-          .update({ raw_message: JSON.stringify(appUsers) })
-          .eq('id', data.id);
+        await sbClient.from('incoming_payments').update({ raw_message: JSON.stringify(appUsers) }).eq('id', data.id);
       } else {
         await sbClient.from('incoming_payments').insert({
           transaction_id: SYSTEM_USERS_TX_ID,
@@ -623,6 +850,454 @@
       }
     }
 
+    async function saveDevicesConfigToSupabase() {
+      localStorage.setItem('APP_DEVICES_CACHE', JSON.stringify(registeredDevices));
+      if (!sbClient) return;
+      const { data } = await sbClient
+        .from('incoming_payments')
+        .select('id')
+        .eq('transaction_id', SYSTEM_DEVICES_TX_ID)
+        .maybeSingle();
+
+      if (data && data.id) {
+        await sbClient.from('incoming_payments').update({ raw_message: JSON.stringify(registeredDevices) }).eq('id', data.id);
+      } else {
+        await sbClient.from('incoming_payments').insert({
+          transaction_id: SYSTEM_DEVICES_TX_ID,
+          raw_message: JSON.stringify(registeredDevices),
+          device_id: '__SYSTEM__',
+          status: 'error',
+        });
+      }
+    }
+
+    // ============================================================================
+    // 2. حساب حالة الهواتف المتصلة ومراقبة انقطاع الإنترنت
+    // ============================================================================
+    function buildDevicesStatusList() {
+      const now = Date.now();
+      const thresholdMs = offlineThresholdMinutes * 60 * 1000;
+      const todayStr = new Date().toLocaleDateString('en-CA');
+
+      const map = new Map();
+
+      for (const reg of registeredDevices) {
+        map.set(reg.device_id, {
+          device_id: reg.device_id,
+          label: reg.label || reg.device_id,
+          wallet_phone: reg.wallet_phone || '—',
+          owner: reg.owner || 'غير محدد',
+          last_sms_at: null,
+          last_sms_amount: null,
+          last_heartbeat_at: null,
+          battery: null,
+          network: null,
+          total_sms_count: 0,
+          today_sms_count: 0,
+          today_amount: 0,
+        });
+      }
+
+      for (const [devId, hb] of Object.entries(deviceHeartbeats)) {
+        if (!map.has(devId)) {
+          map.set(devId, {
+            device_id: devId,
+            label: `هاتف استقبال (${devId})`,
+            wallet_phone: hb.wallet_phone || '—',
+            owner: 'مكتشف تلقائياً',
+            last_sms_at: null,
+            last_sms_amount: null,
+            last_heartbeat_at: null,
+            battery: null,
+            network: null,
+            total_sms_count: 0,
+            today_sms_count: 0,
+            today_amount: 0,
+          });
+        }
+        const entry = map.get(devId);
+        entry.last_heartbeat_at = hb.last_heartbeat_at || null;
+        entry.battery = hb.battery ?? null;
+        entry.network = hb.network || null;
+        if (hb.wallet_phone && entry.wallet_phone === '—') entry.wallet_phone = hb.wallet_phone;
+      }
+
+      for (const p of allPayments) {
+        const devId = p.device_id || 'Android_Phone';
+        if (devId === '__SYSTEM__') continue;
+
+        if (!map.has(devId)) {
+          map.set(devId, {
+            device_id: devId,
+            label: `هاتف استقبال (${devId})`,
+            wallet_phone: p._wallet_phone || '—',
+            owner: 'مكتشف من الرسائل',
+            last_sms_at: null,
+            last_sms_amount: null,
+            last_heartbeat_at: null,
+            battery: null,
+            network: null,
+            total_sms_count: 0,
+            today_sms_count: 0,
+            today_amount: 0,
+          });
+        }
+
+        const entry = map.get(devId);
+        entry.total_sms_count++;
+        if (p._wallet_phone && entry.wallet_phone === '—') {
+          entry.wallet_phone = p._wallet_phone;
+        }
+
+        if (p.created_at) {
+          const ts = new Date(p.created_at).getTime();
+          if (!entry.last_sms_at || ts > new Date(entry.last_sms_at).getTime()) {
+            entry.last_sms_at = p.created_at;
+            entry.last_sms_amount = p.amount;
+          }
+          const dStr = new Date(p.created_at).toLocaleDateString('en-CA');
+          if (dStr === todayStr && p.status !== 'error') {
+            entry.today_sms_count++;
+            entry.today_amount += Number(p.amount || 0);
+          }
+        }
+      }
+
+      const result = [];
+      for (const item of map.values()) {
+        const smsMs = item.last_sms_at ? new Date(item.last_sms_at).getTime() : 0;
+        const hbMs = item.last_heartbeat_at ? new Date(item.last_heartbeat_at).getTime() : 0;
+        const lastSeenMs = Math.max(smsMs, hbMs);
+        item.last_seen_at = lastSeenMs > 0 ? new Date(lastSeenMs).toISOString() : null;
+        item.minutes_since_seen = lastSeenMs > 0 ? Math.floor((now - lastSeenMs) / 60000) : null;
+        item.is_online = lastSeenMs > 0 && (now - lastSeenMs) <= thresholdMs;
+        result.push(item);
+      }
+
+      return result;
+    }
+
+    function formatRelativeTime(isoStr) {
+      if (!isoStr) return 'لم يتصل بعد';
+      const diffSec = Math.max(0, Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000));
+      if (diffSec < 60) return 'منذ لحظات (متصل الآن)';
+      const diffMin = Math.floor(diffSec / 60);
+      if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+      const diffHours = Math.floor(diffMin / 60);
+      const remMin = diffMin % 60;
+      if (diffHours < 24) return `منذ ${diffHours} ساعة و ${remMin} د`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `منذ ${diffDays} يوم و ${diffHours % 24} ساعة`;
+    }
+
+    function playOfflineBeep() {
+      if (!soundAlertEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, ctx.currentTime);
+        osc.frequency.setValueAtTime(380, ctx.currentTime + 0.18);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (_) {}
+    }
+
+    function renderDevicesMonitoring() {
+      const devices = buildDevicesStatusList();
+      const onlineList = devices.filter((d) => d.is_online);
+      const offlineList = devices.filter((d) => !d.is_online);
+
+      const sideBadge = document.getElementById('sideDevicesBadge');
+      const headerCountBadge = document.getElementById('headerDevicesCountBadge');
+      const headerDevicesBtn = document.getElementById('headerDevicesBtn');
+
+      if (offlineList.length > 0) {
+        sideBadge.textContent = `${offlineList.length} مفصول`;
+        sideBadge.className = 'px-2 py-0.5 text-[10px] rounded-full bg-rose-100 text-rose-700 font-bold';
+        headerCountBadge.textContent = `${offlineList.length} مفصول ⚠️`;
+        headerCountBadge.className = 'px-2 py-0.5 rounded-full text-[10px] bg-rose-600 text-white font-extrabold';
+        headerDevicesBtn.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-all';
+      } else {
+        sideBadge.textContent = `${onlineList.length} متصل`;
+        sideBadge.className = 'px-2 py-0.5 text-[10px] rounded-full bg-emerald-50 text-emerald-700 font-bold';
+        headerCountBadge.textContent = `${onlineList.length} متصل ✓`;
+        headerCountBadge.className = 'px-2 py-0.5 rounded-full text-[10px] bg-emerald-600 text-white font-extrabold';
+        headerDevicesBtn.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-all';
+      }
+
+      const banner = document.getElementById('offlineAlertBanner');
+      if (offlineList.length > 0) {
+        banner.classList.remove('hidden');
+        const names = offlineList.map((d) => `${d.label} (${d.device_id} - محفظة ${d.wallet_phone} - آخر اتصال ${formatRelativeTime(d.last_seen_at)})`).join(' ، ');
+        document.getElementById('offlineAlertTitle').textContent =
+          `تنبيه انقطاع اتصال: يوجد (${offlineList.length}) هاتف غير متصل بالإنترنت أو لم يرسل إشارة خلال المهلة المحددة!`;
+        document.getElementById('offlineAlertDesc').textContent = `الهواتف المتأثرة: ${names} — يرجى التأكد من فتح الإنترنت وتطبيق الرصد على الهاتف.`;
+
+        for (const d of offlineList) {
+          if (!lastOfflineAlertedDevices.has(d.device_id)) {
+            lastOfflineAlertedDevices.add(d.device_id);
+            playOfflineBeep();
+          }
+        }
+      } else {
+        banner.classList.add('hidden');
+        lastOfflineAlertedDevices.clear();
+      }
+
+      const miniStrip = document.getElementById('miniDevicesStrip');
+      miniStrip.innerHTML = devices
+        .map((d) => {
+          const badgeCls = d.is_online
+            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+            : 'bg-rose-50 text-rose-800 border-rose-200';
+          const dotCls = d.is_online ? 'bg-emerald-500' : 'bg-rose-500 animate-ping';
+          const statusWord = d.is_online ? 'متصل' : 'مفصول / خامل';
+          return `
+            <button onclick="switchMainView('devices')" class="inline-flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-bold border ${badgeCls} transition-all">
+              <span class="w-2 h-2 rounded-full ${dotCls}"></span>
+              <span>${escapeHtml(d.label)}</span>
+              <span class="font-mono text-[11px] opacity-80" dir="ltr">(${escapeHtml(d.wallet_phone)})</span>
+              <span class="text-[10px] underline">${statusWord} • ${formatRelativeTime(d.last_seen_at)}</span>
+            </button>
+          `;
+        })
+        .join('');
+
+      document.getElementById('devSummaryTotal').textContent = `${devices.length} هاتف مسجل`;
+      document.getElementById('devSummaryOnline').textContent = `${onlineList.length} هاتف متصل`;
+      document.getElementById('devSummaryOffline').textContent = `${offlineList.length} هاتف غير متصل`;
+
+      const isAdmin = currentUser && currentUser.role === 'admin';
+      const grid = document.getElementById('devicesCardsGrid');
+      grid.innerHTML = devices
+        .map((d) => {
+          const statusBadge = d.is_online
+            ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                 متصل بالإنترنت (Online)
+               </span>`
+            : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                 <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                 مفصول / متوقف عن الإرسال (Offline)
+               </span>`;
+
+          const cardBorder = d.is_online
+            ? 'border-emerald-100 bg-white'
+            : 'border-rose-300 bg-rose-50/20 offline-card-pulse';
+
+          const lastSeenExact = d.last_seen_at ? new Date(d.last_seen_at).toLocaleString('ar-EG') : '—';
+          const lastSmsExact = d.last_sms_at ? new Date(d.last_sms_at).toLocaleString('ar-EG') : 'لا توجد رسائل';
+
+          return `
+            <div class="rounded-2xl border-2 ${cardBorder} shadow-soft p-5 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-start justify-between gap-2 mb-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl ${d.is_online ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-100 text-rose-600'} flex items-center justify-center font-bold">
+                      <i data-lucide="smartphone" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-extrabold text-gray-900">${escapeHtml(d.label)}</h4>
+                      <p class="text-xs font-mono text-gray-400" dir="ltr">ID: ${escapeHtml(d.device_id)}</p>
+                    </div>
+                  </div>
+                  ${statusBadge}
+                </div>
+
+                <div class="space-y-2 bg-gray-50/80 rounded-xl p-3.5 border border-gray-100 text-xs">
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 font-semibold">رقم المحفظة المربوطة:</span>
+                    <button onclick="copyText('${d.wallet_phone}', 'رقم المحفظة')" class="font-mono font-extrabold text-indigo-700 hover:underline" dir="ltr">${escapeHtml(d.wallet_phone)} 📋</button>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 font-semibold">المسؤول / القسم:</span>
+                    <span class="font-bold text-gray-800">${escapeHtml(d.owner)}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 font-semibold">آخر إشارة اتصال:</span>
+                    <span class="font-extrabold ${d.is_online ? 'text-emerald-700' : 'text-rose-600'}">${formatRelativeTime(d.last_seen_at)}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 font-semibold">توقيت آخر نشاط:</span>
+                    <span class="text-gray-700 font-semibold">${lastSeenExact}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 font-semibold">آخر تحويل مستلم:</span>
+                    <span class="text-gray-700 font-semibold">${lastSmsExact} ${d.last_sms_amount ? `(${d.last_sms_amount} ج.م)` : ''}</span>
+                  </div>
+                  ${
+                    d.battery !== null || d.network
+                      ? `<div class="flex items-center justify-between pt-1 border-t border-gray-200/60">
+                           <span class="text-gray-500 font-semibold">حالة الشبكة والبطارية:</span>
+                           <span class="font-mono font-bold text-gray-700">${d.network || 'متصل'} ${d.battery !== null ? `• 🔋 ${d.battery}%` : ''}</span>
+                         </div>`
+                      : ''
+                  }
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+                <div class="text-xs">
+                  <span class="text-gray-400 font-semibold">تحويلات اليوم:</span>
+                  <span class="font-extrabold text-gray-900">${d.today_sms_count} عملية</span>
+                  <span class="text-emerald-700 font-bold font-mono">(${d.today_amount.toLocaleString('en-US')} ج.م)</span>
+                  <span class="text-gray-300 mx-1">|</span>
+                  <span class="text-gray-400">الإجمالي: ${d.total_sms_count}</span>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <button onclick="sendDeviceHeartbeatNow('${escapeHtml(d.device_id)}', '${escapeHtml(d.wallet_phone)}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors" title="تأكيد اتصال الهاتف يدوياً الآن">
+                    تأكيد الاتصال ✓
+                  </button>
+                  ${
+                    isAdmin
+                      ? `<button onclick="editRegisteredDevice('${escapeHtml(d.device_id)}')" class="px-2 py-1 rounded-lg text-[11px] font-bold bg-gray-100 hover:bg-gray-200 text-gray-700">تعديل</button>
+                         <button onclick="removeRegisteredDevice('${escapeHtml(d.device_id)}')" class="px-2 py-1 rounded-lg text-[11px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600">حذف</button>`
+                      : ''
+                  }
+                </div>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      lucide.createIcons();
+    }
+
+    async function sendDeviceHeartbeatNow(deviceId, walletPhone) {
+      if (!sbClient) return;
+      const txId = HEARTBEAT_PREFIX + deviceId;
+      const payloadObj = {
+        device_id: deviceId,
+        wallet_phone: walletPhone,
+        last_heartbeat_at: new Date().toISOString(),
+        network: 'نشط (تأكيد مباشر)',
+      };
+      deviceHeartbeats[deviceId] = payloadObj;
+
+      const { data } = await sbClient
+        .from('incoming_payments')
+        .select('id')
+        .eq('transaction_id', txId)
+        .maybeSingle();
+
+      if (data && data.id) {
+        await sbClient
+          .from('incoming_payments')
+          .update({ raw_message: JSON.stringify(payloadObj), created_at: new Date().toISOString() })
+          .eq('id', data.id);
+      } else {
+        await sbClient.from('incoming_payments').insert({
+          transaction_id: txId,
+          raw_message: JSON.stringify(payloadObj),
+          device_id: '__SYSTEM__',
+          status: 'error',
+        });
+      }
+
+      renderDevicesMonitoring();
+      showToast('تم تحديث حالة الهاتف', `الهاتف ${deviceId} مسجل كمتصل الآن`);
+    }
+
+    function switchMainView(view) {
+      currentMainView = view;
+      const isDevices = view === 'devices';
+      document.getElementById('devicesViewContainer').classList.toggle('hidden', !isDevices);
+      document.getElementById('paymentsViewContainer').classList.toggle('hidden', isDevices);
+
+      document.getElementById('navBtnPayments').className = !isDevices
+        ? 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-50/80 text-indigo-700 transition-all'
+        : 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all';
+
+      document.getElementById('navBtnDevices').className = isDevices
+        ? 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-50/80 text-indigo-700 transition-all'
+        : 'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-all';
+
+      document.getElementById('headerDevicesBtnText').textContent = isDevices
+        ? 'العودة لسجل المعاملات'
+        : 'لوحة مراقبة الهواتف';
+
+      renderDevicesMonitoring();
+    }
+
+    function onChangeOfflineThreshold() {
+      offlineThresholdMinutes = Number(document.getElementById('offlineThresholdSelect').value) || 60;
+      localStorage.setItem('OFFLINE_THRESHOLD_MIN', String(offlineThresholdMinutes));
+      renderDevicesMonitoring();
+    }
+
+    function toggleSoundAlert() {
+      soundAlertEnabled = !soundAlertEnabled;
+      localStorage.setItem('SOUND_ALERT_ENABLED', String(soundAlertEnabled));
+      document.getElementById('soundAlertText').textContent = soundAlertEnabled
+        ? 'التنبيه الصوتي: مفعل'
+        : 'التنبيه الصوتي: متوقف';
+    }
+
+    function openAddDeviceModal() {
+      document.getElementById('devCfgId').value = '';
+      document.getElementById('devCfgLabel').value = '';
+      document.getElementById('devCfgWallet').value = '';
+      document.getElementById('devCfgOwner').value = '';
+      document.getElementById('addDeviceModal').classList.remove('hidden');
+      document.getElementById('addDeviceModal').classList.add('flex');
+    }
+
+    function editRegisteredDevice(deviceId) {
+      const allDevs = buildDevicesStatusList();
+      const found = allDevs.find((d) => d.device_id === deviceId);
+      if (!found) return;
+      document.getElementById('devCfgId').value = found.device_id;
+      document.getElementById('devCfgLabel').value = found.label;
+      document.getElementById('devCfgWallet').value = found.wallet_phone === '—' ? '' : found.wallet_phone;
+      document.getElementById('devCfgOwner').value = found.owner;
+      document.getElementById('addDeviceModal').classList.remove('hidden');
+      document.getElementById('addDeviceModal').classList.add('flex');
+    }
+
+    function closeAddDeviceModal() {
+      document.getElementById('addDeviceModal').classList.add('hidden');
+      document.getElementById('addDeviceModal').classList.remove('flex');
+    }
+
+    async function handleSaveDeviceConfig(e) {
+      e.preventDefault();
+      const device_id = document.getElementById('devCfgId').value.trim();
+      const label = document.getElementById('devCfgLabel').value.trim();
+      const wallet_phone = document.getElementById('devCfgWallet').value.trim();
+      const owner = document.getElementById('devCfgOwner').value.trim() || 'إدارة التحصيل';
+      if (!device_id || !label) return;
+
+      const idx = registeredDevices.findIndex((d) => d.device_id === device_id);
+      if (idx !== -1) {
+        registeredDevices[idx] = { device_id, label, wallet_phone, owner };
+      } else {
+        registeredDevices.push({ device_id, label, wallet_phone, owner });
+      }
+
+      await saveDevicesConfigToSupabase();
+      closeAddDeviceModal();
+      renderDevicesMonitoring();
+      showToast('تم حفظ بيانات الهاتف', `تم تسجيل الهاتف ${label} (${device_id}) في لوحة المراقبة`);
+    }
+
+    async function removeRegisteredDevice(deviceId) {
+      if (!confirm(`هل تريد إزالة الهاتف (${deviceId}) من قائمة الهواتف المسجلة؟`)) return;
+      registeredDevices = registeredDevices.filter((d) => d.device_id !== deviceId);
+      await saveDevicesConfigToSupabase();
+      renderDevicesMonitoring();
+    }
+
+    // ============================================================================
+    // 3. تسجيل الدخول وإدارة المستخدمين
+    // ============================================================================
     function fillDemoLogin(phone, pass) {
       document.getElementById('loginPhone').value = phone;
       document.getElementById('loginPassword').value = pass;
@@ -630,7 +1305,7 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      await syncUsersFromSupabase();
+      await syncSystemConfigsFromSupabase();
 
       const phone = document.getElementById('loginPhone').value.trim();
       const pass = document.getElementById('loginPassword').value.trim();
@@ -638,7 +1313,7 @@
 
       const found = appUsers.find((u) => u.phone === phone && u.password === pass);
       if (!found) {
-        errEl.textContent = '❌ رقم التليفون أو كلمة المرور غير صحيحة';
+        errEl.textContent = 'بيانات الدخول غير صحيحة، يرجى التحقق من رقم الهاتف وكلمة المرور.';
         errEl.classList.remove('hidden');
         return;
       }
@@ -659,9 +1334,9 @@
     }
 
     function getRoleLabel(role) {
-      if (role === 'admin') return { text: '👑 Admin (أدمن)', cls: 'bg-indigo-50 text-indigo-700 border-indigo-200' };
-      if (role === 'accounting') return { text: '📊 Accounting (محاسبة)', cls: 'bg-sky-50 text-sky-700 border-sky-200' };
-      return { text: '💼 Sales (سيلز)', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+      if (role === 'admin') return { text: 'مدير النظام (Admin)', cls: 'bg-indigo-50 text-indigo-700 border-indigo-200' };
+      if (role === 'accounting') return { text: 'الإدارة المالية (Accounting)', cls: 'bg-sky-50 text-sky-700 border-sky-200' };
+      return { text: 'إدارة المبيعات (Sales)', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
     }
 
     function applyUserRoleUi() {
@@ -670,7 +1345,7 @@
       document.getElementById('appContainer').classList.remove('hidden');
 
       const roleInfo = getRoleLabel(currentUser.role);
-      document.getElementById('headerWelcomeName').textContent = `مرحباً، ${currentUser.name} 👋`;
+      document.getElementById('headerWelcomeName').textContent = `مرحباً، أ/ ${currentUser.name}`;
       const hBadge = document.getElementById('headerRoleBadge');
       hBadge.textContent = roleInfo.text;
       hBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold border ${roleInfo.cls}`;
@@ -686,6 +1361,12 @@
       headerUsersBtn.classList.toggle('hidden', !isAdmin);
       headerUsersBtn.classList.toggle('inline-flex', isAdmin);
       document.getElementById('headerSimBtn').classList.toggle('hidden', !isAdmin);
+      document.getElementById('addDeviceBtn').classList.toggle('hidden', !isAdmin);
+
+      document.getElementById('offlineThresholdSelect').value = String(offlineThresholdMinutes);
+      document.getElementById('soundAlertText').textContent = soundAlertEnabled
+        ? 'التنبيه الصوتي: مفعل'
+        : 'التنبيه الصوتي: متوقف';
 
       lucide.createIcons();
     }
@@ -715,7 +1396,7 @@
               <td class="py-2.5 px-3">
                 ${
                   appUsers.length > 1
-                    ? `<button onclick="deleteUser(${idx})" class="text-rose-600 hover:underline font-bold">حذف</button>`
+                    ? `<button onclick="deleteUser(${idx})" class="text-rose-600 hover:underline font-bold">إزالة الحساب</button>`
                     : '<span class="text-gray-300">—</span>'
                 }
               </td>
@@ -745,18 +1426,18 @@
       document.getElementById('newUserName').value = '';
       document.getElementById('newUserPhone').value = '';
       document.getElementById('newUserPass').value = '';
-      showToast('تم حفظ المستخدم ✅', `المستخدم ${name} (${role}) جاهز للدخول برقم هاتفه`);
+      showToast('تم حفظ بيانات المستخدم', `تم تفعيل حساب: ${name}`);
     }
 
     async function deleteUser(idx) {
-      if (!confirm('حذف هذا المستخدم؟')) return;
+      if (!confirm('هل أنت متأكد من إزالة حساب هذا المستخدم؟')) return;
       appUsers.splice(idx, 1);
       await saveUsersToSupabase();
       renderUsersTable();
     }
 
     // ============================================================================
-    // 2. استخراج بيانات فودافون كاش ومعالجة كافة الصيغ
+    // 4. استخراج بيانات فودافون كاش ومعالجة كافة الصيغ
     // ============================================================================
     function parseVodafoneCashSms(raw) {
       if (!raw || typeof raw !== 'string') return {};
@@ -815,12 +1496,16 @@
     }
 
     // ============================================================================
-    // 3. الاتصال بـ Supabase وجلب البيانات والفلاتر والـ Pagination
+    // 5. الاتصال بـ Supabase وجلب البيانات والفلاتر والـ Pagination
     // ============================================================================
     async function initApp() {
       const { url, key } = getCredentials();
       sbClient = window.supabase.createClient(url, key);
-      await syncUsersFromSupabase();
+      await syncSystemConfigsFromSupabase();
+
+      setInterval(() => {
+        if (currentUser) renderDevicesMonitoring();
+      }, 15000);
 
       const savedUser = localStorage.getItem('LOGGED_IN_USER');
       if (savedUser) {
@@ -841,16 +1526,17 @@
 
     async function loadPayments() {
       if (!sbClient) return;
+      await syncSystemConfigsFromSupabase();
+
       const { data, error } = await sbClient
         .from('incoming_payments')
         .select('*')
-        .neq('transaction_id', SYSTEM_USERS_TX_ID)
         .order('created_at', { ascending: false })
         .limit(2000);
 
-      if (error) return showToast('خطأ في جلب البيانات', error.message, true);
+      if (error) return showToast('خطأ في استرداد البيانات', error.message, true);
 
-      const rows = (data || []).filter((r) => r.transaction_id !== SYSTEM_USERS_TX_ID && r.device_id !== '__SYSTEM__');
+      const rows = (data || []).filter((r) => !isSystemRecord(r));
       for (const r of rows) {
         await enrichAndHealRow(r);
       }
@@ -866,7 +1552,7 @@
         new Set(allPayments.map((p) => p._wallet_phone).filter(Boolean))
       );
 
-      select.innerHTML = `<option value="">كل المحافظ (${wallets.length})</option>` +
+      select.innerHTML = `<option value="">جميع المحافظ المعتمدة (${wallets.length})</option>` +
         wallets.map((w) => `<option value="${w}">${w}</option>`).join('');
       select.value = currentVal;
     }
@@ -875,10 +1561,11 @@
       if (!sbClient) return;
       if (realtimeChannel) sbClient.removeChannel(realtimeChannel);
       realtimeChannel = sbClient
-        .channel('incoming-payments-v2')
+        .channel('incoming-payments-v3')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'incoming_payments' }, async (payload) => {
-          if (payload.new && payload.new.transaction_id === SYSTEM_USERS_TX_ID) {
-            await syncUsersFromSupabase();
+          if (payload.new && isSystemRecord(payload.new)) {
+            await syncSystemConfigsFromSupabase();
+            renderDevicesMonitoring();
             return;
           }
           if (payload.eventType === 'INSERT') {
@@ -889,7 +1576,7 @@
               populateWalletDropdown();
               updateDashboard();
               if (newRow.status !== 'error') {
-                showToast(`💸 تحويل جديد: ${Number(newRow.amount).toFixed(2)} ج.م`, `من: ${newRow.sender_phone} إلى محفظة: ${newRow._wallet_phone || '—'}`);
+                showToast(`إشعار تحويل وارد: ${Number(newRow.amount).toFixed(2)} ج.م`, `من رقم: ${newRow.sender_phone} إلى محفظة: ${newRow._wallet_phone || '—'}`);
               }
             }
           } else if (payload.eventType === 'UPDATE') {
@@ -906,7 +1593,7 @@
         })
         .subscribe((status) => {
           const ok = status === 'SUBSCRIBED';
-          document.getElementById('connText').textContent = ok ? 'متصل لحظياً' : 'انقطع الاتصال';
+          document.getElementById('connText').textContent = ok ? 'متصل بالخادم الفوري' : 'غير متصل بالخادم';
         });
     }
 
@@ -938,7 +1625,7 @@
         if (dateFrom || dateTo) {
           if (!p.created_at) return false;
           const rowDate = new Date(p.created_at);
-          const yyyyMmDd = rowDate.toLocaleDateString('en-CA'); // YYYY-MM-DD local
+          const yyyyMmDd = rowDate.toLocaleDateString('en-CA');
           if (dateFrom && yyyyMmDd < dateFrom) return false;
           if (dateTo && yyyyMmDd > dateTo) return false;
         }
@@ -994,8 +1681,8 @@
     function toggleSortOrder() {
       sortDescending = !sortDescending;
       document.getElementById('sortOrderBtn').innerHTML = sortDescending
-        ? '<span>الأحدث أولاً ⬇</span>'
-        : '<span>الأقدم أولاً (أول تحويل) ⬆</span>';
+        ? '<span>الترتيب: الأحدث أولاً ⬇</span>'
+        : '<span>الترتيب: الأقدم أولاً ⬆</span>';
       currentPage = 1;
       renderTable();
     }
@@ -1028,14 +1715,14 @@
       }
 
       document.getElementById('kpiTotalAmount').textContent = `${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
-      document.getElementById('kpiTotalBadge').textContent = `${validCount} عملية صحيحة`;
-      document.getElementById('kpiUnlinkedCount').textContent = `${unlinkedCount} تحويل`;
+      document.getElementById('kpiTotalBadge').textContent = `${validCount} معاملة مالية`;
+      document.getElementById('kpiUnlinkedCount').textContent = `${unlinkedCount} معاملة`;
       document.getElementById('kpiUnlinkedAmount').textContent = `${unlinkedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
-      document.getElementById('kpiLinkedCount').textContent = `${linkedCount} تحويل`;
+      document.getElementById('kpiLinkedCount').textContent = `${linkedCount} معاملة`;
       document.getElementById('kpiLinkedAmount').textContent = `${linkedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
 
       document.getElementById('latestWalletBalance').textContent =
-        latestBalance !== null ? `الرصيد: ${latestBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م` : '—';
+        latestBalance !== null ? `الرصيد المتاح: ${latestBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م` : '—';
 
       ['All', 'Unlinked', 'Linked', 'Error'].forEach((k) => {
         const val = k === 'All' ? allPayments.length : k === 'Unlinked' ? unlinkedCount : k === 'Linked' ? linkedCount : errorCount;
@@ -1044,6 +1731,7 @@
       });
 
       renderTable();
+      renderDevicesMonitoring();
       lucide.createIcons();
     }
 
@@ -1067,13 +1755,13 @@
       if (totalItems === 0) {
         topEl.innerHTML = '';
         bottomEl.innerHTML = '';
-        infoEl.textContent = 'لا توجد سجلات';
+        infoEl.textContent = 'لا توجد سجلات مطابقة';
         return;
       }
 
       const startIdx = (currentPage - 1) * pageSize + 1;
       const endIdx = Math.min(currentPage * pageSize, totalItems);
-      infoEl.textContent = `عرض ${startIdx} إلى ${endIdx} من أصل ${totalItems} سجل (صفحة ${currentPage} من ${totalPages})`;
+      infoEl.textContent = `عرض السجلات من ${startIdx} إلى ${endIdx} من إجمالي ${totalItems} سجل (الصفحة ${currentPage} من ${totalPages})`;
 
       const pages = [];
       const maxButtons = 5;
@@ -1089,7 +1777,7 @@
 
       const html = `
         <button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === 1 ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}" title="الصفحة الأولى">الأولى</button>
-        <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === 1 ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}">◀</button>
+        <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === 1 ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}">السابق</button>
         ${pages
           .map(
             (p) => `
@@ -1097,8 +1785,8 @@
         `
           )
           .join('')}
-        <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}">▶</button>
-        <button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}" title="الصفحة الأخيرة (أول تحويل)">الأخيرة (${totalPages})</button>
+        <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}">التالي</button>
+        <button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold border ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 border-gray-100' : 'bg-white hover:bg-indigo-50 text-gray-700 border-gray-200'}" title="الصفحة الأخيرة">الأخيرة (${totalPages})</button>
       `;
 
       topEl.innerHTML = html;
@@ -1109,10 +1797,9 @@
       const tbody = document.getElementById('paymentsTableBody');
       const filtered = getFilteredPayments();
 
-      // حساب إجمالي المبالغ المفلترة
       const filteredSum = filtered.reduce((acc, r) => acc + (r.status !== 'error' && r.amount ? Number(r.amount) : 0), 0);
       document.getElementById('filteredSummaryBadge').textContent =
-        `نتائج البحث: ${filtered.length} سجل • بإجمالي ${filteredSum.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
+        `إجمالي النتائج المطابقة: ${filtered.length} معاملة • بقيمة إجمالية ${filteredSum.toLocaleString('en-US', { minimumFractionDigits: 2 })} ج.م`;
 
       const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
       if (currentPage > totalPages) currentPage = totalPages;
@@ -1120,7 +1807,7 @@
       renderPaginationControls(filtered.length, totalPages);
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" class="py-14 text-center text-gray-400 text-sm">لا توجد تحويلات مطابقة للفلاتر المحددة</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="py-14 text-center text-gray-400 text-sm">لا توجد معاملات مطابقة لمعايير البحث المحددة</td></tr>`;
         return;
       }
 
@@ -1134,27 +1821,27 @@
           const amountHtml =
             p.amount !== null
               ? `<span class="text-sm lg:text-base font-extrabold text-emerald-700 font-mono">${Number(p.amount).toFixed(2)}</span> <span class="text-[11px] text-gray-400">ج.م</span>`
-              : `<span class="text-xs font-semibold text-rose-500">غير تحويل</span>`;
+              : `<span class="text-xs font-semibold text-rose-500">إشعار إداري</span>`;
 
           const senderHtml = p.sender_phone
             ? `<div class="space-y-0.5">
-                 <button onclick="copyText('${p.sender_phone}', 'رقم المحول منه')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 font-mono text-xs font-bold transition-colors">
-                   <span>📲 ${p.sender_phone}</span>
+                 <button onclick="copyText('${p.sender_phone}', 'رقم هاتف المُحوِّل')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 font-mono text-xs font-bold transition-colors">
+                   <span>${p.sender_phone}</span>
                    <span class="text-[10px] opacity-70">نسخ</span>
                  </button>
-                 ${p._sender_name ? `<p class="text-[11px] font-bold text-gray-600 max-w-[190px] truncate" title="${escapeHtml(p._sender_name)}">👤 ${escapeHtml(p._sender_name)}</p>` : ''}
+                 ${p._sender_name ? `<p class="text-[11px] font-bold text-gray-600 max-w-[200px] truncate" title="${escapeHtml(p._sender_name)}">${escapeHtml(p._sender_name)}</p>` : ''}
                </div>`
             : '<span class="text-gray-300">—</span>';
 
           const walletHtml = p._wallet_phone
-            ? `<button onclick="copyText('${p._wallet_phone}', 'رقم محفظتنا')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200/80 font-mono text-xs font-bold transition-colors">
-                 <span>🏦 ${p._wallet_phone}</span>
+            ? `<button onclick="copyText('${p._wallet_phone}', 'رقم المحفظة المستقبِلة')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200/80 font-mono text-xs font-bold transition-colors">
+                 <span>${p._wallet_phone}</span>
                  <span class="text-[10px] opacity-70">نسخ</span>
                </button>`
             : '<span class="text-gray-300">—</span>';
 
           const txHtml = p.transaction_id
-            ? `<button onclick="copyText('${p.transaction_id}', 'رقم العملية')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200/80 font-mono text-xs font-bold transition-colors">
+            ? `<button onclick="copyText('${p.transaction_id}', 'الرقم المرجعي للمعاملة')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200/80 font-mono text-xs font-bold transition-colors">
                  <span>#${p.transaction_id}</span>
                  <span class="text-[10px] opacity-70">نسخ</span>
                </button>`
@@ -1167,24 +1854,24 @@
 
           const statusHtml =
             p.status === 'linked'
-              ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/70">✓ مربوط</span>`
+              ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/70">معتمدة ومربوطة</span>`
               : p.status === 'unlinked'
-              ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/70">⏳ قيد الانتظار</span>`
-              : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200/70">⚠️ أخرى</span>`;
+              ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/70">قيد المراجعة</span>`
+              : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200/70">إشعار غير مالي</span>`;
 
           let actionBtn = '';
           if (p.status !== 'error') {
             if (p.status === 'linked') {
               actionBtn = canUnlink
-                ? `<button onclick="quickToggleStatus(${p.id}, 'unlinked')" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">إلغاء الربط</button>`
-                : `<span class="text-[11px] text-emerald-600 font-bold">تم التأكيد</span>`;
+                ? `<button onclick="quickToggleStatus(${p.id}, 'unlinked')" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">إلغاء الاعتماد</button>`
+                : `<span class="text-[11px] text-emerald-600 font-bold">معتمدة</span>`;
             } else {
-              actionBtn = `<button onclick="quickToggleStatus(${p.id}, 'linked')" class="px-3 py-1 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs transition-colors">✓ تأكيد وربط</button>`;
+              actionBtn = `<button onclick="quickToggleStatus(${p.id}, 'linked')" class="px-3 py-1 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs transition-colors">اعتماد وربط</button>`;
             }
           }
 
           const deleteBtn = isAdmin
-            ? `<button onclick="deletePayment(${p.id})" class="p-1.5 rounded-xl text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="حذف">🗑</button>`
+            ? `<button onclick="deletePayment(${p.id})" class="p-1.5 rounded-xl text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="حذف السجل">🗑</button>`
             : '';
 
           return `
@@ -1209,21 +1896,21 @@
 
     async function quickToggleStatus(id, status) {
       await sbClient.from('incoming_payments').update({ status }).eq('id', id);
-      showToast('تم التحديث ✅', `تم تحديث العملية #${id} بواسطة ${currentUser ? currentUser.name : ''}`);
+      showToast('تم تحديث حالة المعاملة', `تم التحديث للسجل #${id} بواسطة ${currentUser ? currentUser.name : ''}`);
       loadPayments();
     }
 
     async function deletePayment(id) {
-      if (!confirm(`هل تريد حذف السجل #${id}؟`)) return;
+      if (!confirm(`هل أنت متأكد من حذف السجل رقم #${id} نهائياً؟`)) return;
       await sbClient.from('incoming_payments').delete().eq('id', id);
-      showToast('تم الحذف', `تم حذف السجل #${id}`);
+      showToast('تم حذف السجل', `تمت إزالة السجل رقم #${id}`);
       loadPayments();
     }
 
     function exportFilteredCsv() {
       const rows = getFilteredPayments();
-      if (rows.length === 0) return showToast('تنبيه', 'لا توجد بيانات لتصديرها', true);
-      const headers = ['ID', 'Amount', 'Sender Phone', 'Sender Name', 'Our Wallet', 'Transaction ID', 'Status', 'Created At', 'Device'];
+      if (rows.length === 0) return showToast('تنبيه', 'لا توجد سجلات مطابقة لتصديرها', true);
+      const headers = ['Record ID', 'Amount (EGP)', 'Sender Phone', 'Sender Name', 'Receiving Wallet', 'Transaction Reference', 'Status', 'Timestamp', 'Receiving Device'];
       const csvLines = [
         headers.join(','),
         ...rows.map((r) =>
@@ -1243,7 +1930,7 @@
       const blob = new Blob(['\uFEFF' + csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `payments_export_${new Date().toLocaleDateString('en-CA')}.csv`;
+      a.download = `financial_transactions_${new Date().toLocaleDateString('en-CA')}.csv`;
       a.click();
     }
 
@@ -1259,8 +1946,8 @@
       sb.classList.toggle('lg:hidden');
     }
 
-    function copyPrimaryWallet() { if (primaryWalletNumber) copyText(primaryWalletNumber, 'رقم محفظتنا'); }
-    function copyText(text, label) { navigator.clipboard.writeText(text); showToast('تم النسخ بنجاح 📋', `${label}: ${text}`); }
+    function copyPrimaryWallet() { if (primaryWalletNumber) copyText(primaryWalletNumber, 'رقم حساب المحفظة'); }
+    function copyText(text, label) { navigator.clipboard.writeText(text); showToast('تم النسخ إلى الحافظة', `${label}: ${text}`); }
 
     function openSimModal() {
       const amt = [250, 400, 600, 750][Math.floor(Math.random() * 4)];
@@ -1277,7 +1964,7 @@
       const p_raw_message = document.getElementById('simMessage').value.trim();
       if (!p_raw_message) return;
       const { error } = await sbClient.rpc('ingest_sms_payment', { p_raw_message, p_device_id });
-      if (error) showToast('خطأ الإرسال', error.message, true);
+      if (error) showToast('خطأ في الإرسال', error.message, true);
       else { closeSimModal(); loadPayments(); }
     }
 
